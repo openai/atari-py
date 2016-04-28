@@ -7,6 +7,7 @@ from ctypes import *
 import numpy as np
 from numpy.ctypeslib import as_ctypes
 import os
+import six
 
 ale_lib = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__),
                                         'ale_interface/build/libale_c.so'))
@@ -134,7 +135,7 @@ class ALEInterface(object):
       ale_lib.setFloat(self.obj, key, value)
 
     def loadROM(self, rom_file):
-        ale_lib.loadROM(self.obj, rom_file)
+        ale_lib.loadROM(self.obj, six.b(rom_file))
 
     def act(self, action):
         return ale_lib.act(self.obj, int(action))
