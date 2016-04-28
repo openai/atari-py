@@ -8,7 +8,7 @@ To install via pip, run:
 
 ```pip install atari-py```
 
-Alternatively, you can install using setuptools using
+Alternatively, you can install using setuptools using:
 
 ```python setup.py install```
 
