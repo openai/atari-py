@@ -1,4 +1,4 @@
-from ale_python_interface import *
+from .ale_python_interface import *
 import os
 
 def _game_dir():
