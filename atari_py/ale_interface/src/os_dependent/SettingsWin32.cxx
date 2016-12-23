@@ -29,6 +29,7 @@ SettingsWin32::SettingsWin32(OSystem* osystem)
   // Most Windows systems work better without this
   setInternal("dirtyrects", "false");
   setInternal("romdir", "c:\\");
+  setInternal("gl_lib", "opengl32.dll");
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

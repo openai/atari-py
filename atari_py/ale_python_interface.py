@@ -10,7 +10,7 @@ import os
 import six
 
 ale_lib = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__),
-                                        'ale_interface/build/libale_c.so'))
+                                        'ale_interface/build/libale_c.dll'))
 
 ale_lib.ALE_new.argtypes = None
 ale_lib.ALE_new.restype = c_void_p

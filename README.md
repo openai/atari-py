@@ -2,24 +2,39 @@
 
 [![Build Status](https://travis-ci.org/openai/atari-py.svg?branch=master)](https://travis-ci.org/openai/atari-py)
 
-A packaged and slightly-modified version of [https://github.com/bbitmaster/ale_python_interface](https://github.com/bbitmaster/ale_python_interface).
+A Windows-MSYS2-MinGW compatible version of [https://github.com/openai/ale_python_interface](https://github.com/openai/ale_python_interface).
 
 ## Installation
 
-To install via pip, run:
+1) Install MSYS2 and follow post-install instructions: [https://msys2.github.io/](https://msys2.github.io/)
 
-```pip install atari-py```
+2) Install MSYS2 packages (via MSYS terminal):
 
-Alternatively, you can install using setuptools using:
+```pacman -S base-devel mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake```
 
-```python setup.py install```
+3) Append to current Windows User PATH: ";C:\msys64\mingw64\bin;C:\msys64\usr\bin"
 
-You can also trigger a build of the C++ code via `make`, and then add
+i.e. Start->right-click Computer->Properties->Advanced System Settings->Environment Variables->edit User variables PATH
+
+4) Install Xming: [https://sourceforge.net/projects/xming/])(https://sourceforge.net/projects/xming/)
+    Add a new windows PATH variable (same method as #3): Name=DISPLAY, Value=:0
+
+Or just remember to set it in your cmd.exe environment:
+
+```set DISPLAY=:0```
+
+5) Install atari-py and OpenAI Gym
+
+```git clone https://github.com/rybskej/atari-py```
+
+```cd atari-py```
+
+```make && python setup.py install && pip install "gym[atari]"```
+
+You can also just build the C++ code via `make`, and then add
 this repo to your `PYTHONPATH`:
 
-```export PYTHONPATH=/path/to/atari-py:$PYTHONPATH```
+```set PYTHONPATH="C:\path\to\atari-py:$PYTHONPATH"```
 
 ### Common issues
 
-- Make sure you have `cmake` installed. On OSX, you probably want
-  `brew install cmake`.

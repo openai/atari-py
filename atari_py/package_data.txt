@@ -1,4 +1,4 @@
-ale_interface/build/*.so
+ale_interface/build/*.dll
 ale_interface/build/ale
 ale_c_wrapper.cpp
 ale_c_wrapper.h
