@@ -52,14 +52,17 @@ extern "C" {
   int getScreenWidth(ALEInterface *ale){return ale->getScreen().width();}
   int getScreenHeight(ALEInterface *ale){return ale->getScreen().height();}
 
-  void getScreenRGB(ALEInterface *ale, int *output_buffer){
+  void getScreenRGB(ALEInterface *ale, unsigned char *output_buffer){
     size_t w = ale->getScreen().width();
     size_t h = ale->getScreen().height();
     size_t screen_size = w*h;
     pixel_t *ale_screen_data = ale->getScreen().getArray();
 
-    for(int i = 0;i < w*h;i++){
-        output_buffer[i] = rgb_palette[ale_screen_data[i]];
+    for(int i = 0; i < w*h; i++){
+      int rgb = rgb_palette[ale_screen_data[i]];
+      output_buffer[3*i] = rgb;
+      output_buffer[3*i+1] = rgb>>8;
+      output_buffer[3*i+2] = rgb>>16;
     }
 
   }
