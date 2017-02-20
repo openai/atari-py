@@ -6,15 +6,27 @@ from setuptools.command.build_ext import build_ext as _build_ext
 from setuptools.extension import Library
 
 
+# Force linker to produce a shared library
 class build_ext(_build_ext):
+    if sys.platform.startswith('linux'):
+        def get_ext_filename(self, fullname):
+            import setuptools.command.build_ext
+            tmp = setuptools.command.build_ext.libtype
+            setuptools.command.build_ext.libtype = 'shared'
+            ret = _build_ext.get_ext_filename(self, fullname)
+            setuptools.command.build_ext.libtype = tmp
+            return ret
+
     def setup_shlib_compiler(self):
         _build_ext.setup_shlib_compiler(self)
-        if os.name == 'nt':
-            # Currently setuptools Library linking on Windows is broken
-            # so we are monkeypatching it to be able to produce dll
+        if sys.platform == 'win32':
             from distutils.ccompiler import CCompiler
             mtd = CCompiler.link_shared_object.__get__(self.shlib_compiler)
             self.shlib_compiler.link_shared_object = mtd
+        elif sys.platform.startswith('linux'):
+            from functools import partial
+            c = self.shlib_compiler
+            c.link_shared_object = partial(c.link, c.SHARED_LIBRARY)
 
 
 def list_files(path):
@@ -79,6 +91,11 @@ if zlib_root is not None:
     compiler = new_compiler(compiler=get_default_compiler())
     ext = compiler.static_lib_extension
 
+    if os.name == 'nt':
+        zlib_name = 'zlib'
+    else:
+        zlib_name = 'libz'
+
     import tempfile
     from distutils.ccompiler import CompileError, LinkError
     tmp_dir = tempfile.mkdtemp()
@@ -87,7 +104,7 @@ if zlib_root is not None:
         f.write("#include <zlib.h>\nint main() { inflate(0, 0); return 0; }")
     try:
         for i, path in enumerate(fnmatch.filter(list_files(zlib_root),
-                                                '*zlib*' + ext)):
+                                                '*%s*%s' % (zlib_name, ext))):
             tmp_dir_i = os.path.join(tmp_dir, str(i))
             zlib_library = os.path.splitext(os.path.basename(path))[0]
             zlib_library_dir = os.path.dirname(path)
@@ -115,7 +132,10 @@ if zlib_root is not None:
             break
     library_dirs.append(zlib_library_dir)
 else:
-    zlib_library = 'zlib'
+    if os.name == 'nt':
+        zlib_library = 'zlib'
+    else:
+        zlib_library = 'z'
 
 
 ale_c = Library('ale_c',

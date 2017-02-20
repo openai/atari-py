@@ -13,7 +13,10 @@ import six
 def get_shared_lib_path():
     from distutils.ccompiler import get_default_compiler, new_compiler
     from distutils.sysconfig import get_config_var
-    fname = 'ale_c'
+    if os.name == 'nt':
+        fname = 'ale_c'
+    else:
+        fname = 'libale_c'
     ext_suffix = get_config_var('EXT_SUFFIX')
     if ext_suffix is not None:
         fname += os.path.splitext(ext_suffix)[0]
