@@ -5,9 +5,11 @@ option(USE_SDL "Use SDL" OFF)
 option(USE_RLGLUE "Use RL-Glue" OFF)
 option(BUILD_EXAMPLES "Build Example Agents" OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS")
-add_definitions(-DHAVE_INTTYPES)
-set(LINK_LIBS z)
+find_package(ZLIB REQUIRED)
+if(ZLIB_FOUND)
+  include_directories(${ZLIB_INCLUDE_DIRS})
+  set(LINK_LIBS ${ZLIB_LIBRARIES})
+endif()
 
 if(USE_RLGLUE)
   add_definitions(-D__USE_RLGLUE)
@@ -46,13 +48,14 @@ endforeach(module ${MODULES})
 
 # OS-dependent specifics
 if(APPLE)
+  add_definitions(-DBSPF_MAC_OSX)
   include_directories(/System/Library/Frameworks/vecLib.framework/Versions/Current/Headers)
   set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
-endif()
-
-if(WINDOWS OR MINGW)
+elseif(WIN32 OR MINGW)
+  add_definitions(-DBSPF_WIN32)
   list(APPEND SOURCES ${SOURCE_DIR}/os_dependent/SettingsWin32.cxx ${SOURCE_DIR}/os_dependent/OSystemWin32.cxx ${SOURCE_DIR}/os_dependent/FSNodeWin32.cxx)
 else()
+  add_definitions(-DBSPF_UNIX)
   list(APPEND SOURCES ${SOURCE_DIR}/os_dependent/SettingsUNIX.cxx ${SOURCE_DIR}/os_dependent/OSystemUNIX.cxx ${SOURCE_DIR}/os_dependent/FSNodePOSIX.cxx)
 endif()
 

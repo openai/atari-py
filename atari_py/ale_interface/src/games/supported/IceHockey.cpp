@@ -12,7 +12,8 @@
 #include "IceHockey.hpp"
 
 #include "../RomUtils.hpp"
-using namespace std;
+
+#include <algorithm>
 
 
 IceHockeySettings::IceHockeySettings() {
@@ -34,10 +35,10 @@ RomSettings* IceHockeySettings::clone() const {
 void IceHockeySettings::step(const System& system) {
 
     // update the reward
-    int my_score = max(getDecimalScore(0x8A, &system), 0);
-    int oppt_score = max(getDecimalScore(0x8B, &system), 0);
+    int my_score = (std::max)(getDecimalScore(0x8A, &system), 0);
+    int oppt_score = (std::max)(getDecimalScore(0x8B, &system), 0);
     int score = my_score - oppt_score;
-    int reward = min(score - m_score, 1);
+    int reward = (std::min)(score - m_score, 1);
     m_reward = reward;
     m_score = score;
 

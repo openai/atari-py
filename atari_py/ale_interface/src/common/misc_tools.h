@@ -17,7 +17,7 @@
 
 #include "Constants.h"
 
-#if (defined(WIN32) || defined(__MINGW32__))
+#if (defined(_WIN32) || defined(__MINGW32__))
 #include <sys/time.h>
 #endif
 
@@ -54,7 +54,7 @@ inline void bound(int& x, int lower_bound, int upper_bound) {
 /* *****************************************************************************
     Return time in milliseconds. 
  **************************************************************************** */
-#if (defined(WIN32) || defined(__MINGW32__))
+#if (defined(_WIN32) || defined(__MINGW32__))
 
 #include <windows.h>
 inline long timeMillis() {

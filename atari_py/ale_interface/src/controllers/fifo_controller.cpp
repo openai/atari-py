@@ -89,7 +89,7 @@ void FIFOController::handshake() {
   // send the width and height of the screen through the pipe
   char out_buffer [1024];
   
-  snprintf (out_buffer, sizeof(out_buffer), "%d-%d\n", 
+  BSPF_snprintf(out_buffer, sizeof(out_buffer), "%d-%d\n", 
     (int)m_environment.getScreen().width(),
     (int)m_environment.getScreen().height());
   

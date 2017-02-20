@@ -20,8 +20,12 @@ char *strchr (), *strrchr ();
 #endif
 #endif /* STDC_HEADERS */
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
+#ifdef _WIN32
+# include <io.h>
+#else
+# if HAVE_UNISTD_H
+#  include <unistd.h>
+# endif
 #endif
 
 #if HAVE_LIBC_H
