@@ -9,8 +9,20 @@ from numpy.ctypeslib import as_ctypes
 import os
 import six
 
-ale_lib = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__),
-                                        'ale_interface/build/libale_c.so'))
+
+def get_shared_lib_path():
+    from distutils.ccompiler import get_default_compiler, new_compiler
+    from distutils.sysconfig import get_config_var
+    fname = 'ale_c'
+    ext_suffix = get_config_var('EXT_SUFFIX')
+    if ext_suffix is not None:
+        fname += os.path.splitext(ext_suffix)[0]
+    fname += new_compiler(compiler=get_default_compiler()).shared_lib_extension
+    path = os.path.join(os.path.dirname(__file__), '..', fname)
+    return os.path.abspath(path)
+
+
+ale_lib = cdll.LoadLibrary(get_shared_lib_path())
 
 ale_lib.ALE_new.argtypes = None
 ale_lib.ALE_new.restype = c_void_p
