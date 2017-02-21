@@ -67,21 +67,34 @@ elif sys.platform == "win32":
     for fname in 'SettingsWin32.cxx OSystemWin32.cxx FSNodeWin32.cxx'.split():
         sources.append(os.path.join(basepath, 'os_dependent', fname))
 
+
+def rglob(path, pattern):
+    return fnmatch.filter(list_files(path), pattern)
+
+
+def find_include_dirs(root, fname):
+    return {os.path.dirname(path)
+            for path in rglob(root, '*' + fname)}
+
+
 library_dirs = []
 zlib_root = os.environ.get('ZLIB_ROOT')
 if zlib_root is not None:
-    if not os.path.isfile(os.path.join(zlib_root, 'zlib.h')):
-        raise ValueError("There is no 'zlib.h' in ZLIB_ROOT folder")
-    zlib_includes = [zlib_root]
-
     import fnmatch
-    zlib_includes += {
-        os.path.dirname(path)
-        for path in fnmatch.filter(list_files(zlib_root), '*zconf.h')
-    }
+
+    zlib_includes = []
+
+    zlib_dirs = find_include_dirs(zlib_root, 'zlib.h')
+    if not zlib_dirs:
+        raise ValueError("Failed to find 'zlib.h' under ZLIB_ROOT folder. "
+                         "It looks like there is no zlib in supplied path.")
+    zlib_includes += zlib_dirs
+
+    zconf_dirs = find_include_dirs(zlib_root, 'zconf.h')
     if not zlib_includes:
         raise ValueError("Failed to find 'zconf.h' under ZLIB_ROOT folder. "
                          "Have you compiled zlib?")
+    zlib_includes += zconf_dirs
     includes += zlib_includes
 
     zlib_libraries = set()
@@ -103,8 +116,7 @@ if zlib_root is not None:
     with open(src_path, 'w') as f:
         f.write("#include <zlib.h>\nint main() { inflate(0, 0); return 0; }")
     try:
-        for i, path in enumerate(fnmatch.filter(list_files(zlib_root),
-                                                '*%s*%s' % (zlib_name, ext))):
+        for i, path in enumerate(rglob(zlib_root, '*%s*%s' % (zlib_name, ext))):
             tmp_dir_i = os.path.join(tmp_dir, str(i))
             zlib_library = os.path.splitext(os.path.basename(path))[0]
             zlib_library_dir = os.path.dirname(path)
