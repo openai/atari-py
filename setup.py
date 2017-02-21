@@ -108,6 +108,7 @@ if zlib_root is not None:
         zlib_name = 'zlib'
     else:
         zlib_name = 'libz'
+    zlib_lib_pattern = '%s*%s' % (zlib_name, ext)
 
     import tempfile
     from distutils.ccompiler import CompileError, LinkError
@@ -116,7 +117,7 @@ if zlib_root is not None:
     with open(src_path, 'w') as f:
         f.write("#include <zlib.h>\nint main() { inflate(0, 0); return 0; }")
     try:
-        for i, path in enumerate(rglob(zlib_root, '*%s*%s' % (zlib_name, ext))):
+        for i, path in enumerate(rglob(zlib_root, '*' + zlib_lib_pattern)):
             tmp_dir_i = os.path.join(tmp_dir, str(i))
             zlib_library = os.path.splitext(os.path.basename(path))[0]
             zlib_library_dir = os.path.dirname(path)
@@ -135,8 +136,9 @@ if zlib_root is not None:
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
     if not zlib_libraries:
-        raise ValueError("Failed to find a suitable library (zlib*%s) under "
-                         "ZLIB_ROOT folder. Have you compiled zlib?" % ext)
+        raise ValueError("Failed to find a suitable library (%s) under "
+                         "ZLIB_ROOT folder. Have you compiled zlib?"
+                         % zlib_lib_pattern)
 
     # Priority to static library (Windows)
     for zlib_library, zlib_library_dir in zlib_libraries:
