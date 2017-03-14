@@ -193,13 +193,13 @@ class ALEInterface(object):
     def getScreenRGB(self, screen_data=None):
         """This function fills screen_data with the data in RGB format
         screen_data MUST be a numpy array of uint8. This can be initialized like so:
-        screen_data = np.empty((height,width,3), dtype=np.uint8)
+        screen_data = np.empty((height,width,4), dtype=np.uint8)
         If it is None,  then this function will initialize it.
         """
         if(screen_data is None):
             width = ale_lib.getScreenWidth(self.obj)
             height = ale_lib.getScreenHeight(self.obj)
-            screen_data = np.empty((height, width,3), dtype=np.uint8)
+            screen_data = np.empty((height, width,4), dtype=np.uint8)
         ale_lib.getScreenRGB(self.obj, as_ctypes(screen_data[:]))
         return screen_data
 
