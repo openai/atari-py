@@ -191,10 +191,15 @@ class ALEInterface(object):
         return screen_data
 
     def getScreenRGB(self, screen_data=None):
-        """This function fills screen_data with the data in RGB format
+        """This function fills screen_data with the data in RGB format.
         screen_data MUST be a numpy array of uint8. This can be initialized like so:
-        screen_data = np.empty((height,width,4), dtype=np.uint8)
+          screen_data = np.empty((height,width,4), dtype=np.uint8)
         If it is None,  then this function will initialize it.
+        On little-endian machines like x86, the channels are BGRZ order:
+            screen_data[x, y, 0:4] is [blue, green, red, 0]
+        On big-endian machines (rare in 2017) the channels would be the opposite order.
+        There's not much error checking here: if you supply an array that's too small
+        this function will produce undefined behavior.
         """
         if(screen_data is None):
             width = ale_lib.getScreenWidth(self.obj)
