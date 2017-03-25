@@ -56,20 +56,23 @@ typedef unsigned int uInt32;
 #endif
 
 // Defines to help with path handling
-//ALE  #if defined BSPF_UNIX
-#define BSPF_PATH_SEPARATOR  "/"
-//ALE  #elif (defined(BSPF_DOS) || defined(BSPF_WIN32) || defined(BSPF_OS2))
-//ALE    #define BSPF_PATH_SEPARATOR  "\\"
-//ALE  #elif defined BSPF_MAC_OSX
-//ALE    #define BSPF_PATH_SEPARATOR  "/"
-//ALE  #elif defined BSPF_GP2X
-//ALE      #define BSPF_PATH_SEPARATOR  "/"
-//ALE  #endif
+#if defined(BSPF_UNIX)
+  #define BSPF_PATH_SEPARATOR  "/"
+#elif (defined(BSPF_DOS) || defined(BSPF_WIN32) || defined(BSPF_OS2))
+  #define BSPF_PATH_SEPARATOR  "\\"
+#elif defined(BSPF_MAC_OSX)
+  #define BSPF_PATH_SEPARATOR  "/"
+#elif defined(BSPF_GP2X)
+  #define BSPF_PATH_SEPARATOR  "/"
+#else
+  #error "Unsupported platform or misconfigured"
+#endif
 
 // I wish Windows had a complete POSIX layer
 #ifdef BSPF_WIN32
-  #define BSPF_strcasecmp stricmp
-  #define BSPF_strncasecmp strnicmp
+//#if defined(_MSC_VER) && (_MSC_VER < 1600)
+  #define BSPF_strcasecmp _stricmp
+  #define BSPF_strncasecmp _strnicmp
   #define BSPF_isblank(c) ((c == ' ') || (c == '\t'))
   #define BSPF_snprintf _snprintf
   #define BSPF_vsnprintf _vsnprintf

@@ -1,26 +1,165 @@
-import multiprocessing
+import glob
 import os
-from setuptools import setup
-import subprocess
 import sys
-from distutils.command.build import build as DistutilsBuild
+from setuptools import setup
+from setuptools.command.build_ext import build_ext as _build_ext
+from setuptools.extension import Library
 
-with open(os.path.join(os.path.dirname(__file__), 'atari_py/package_data.txt')) as f:
-    package_data = [line.rstrip() for line in f.readlines()]
 
-class Build(DistutilsBuild):
-    def run(self):
-        cores_to_use = max(1, multiprocessing.cpu_count() - 1)
-        cmd = ['make', 'build', '-C', 'atari_py/ale_interface', '-j', str(cores_to_use)]
-        try:
-            subprocess.check_call(cmd)
-        except subprocess.CalledProcessError as e:
-            sys.stderr.write("Could not build atari-py: %s. (HINT: are you sure cmake is installed? You might also be missing a library. Atari-py requires: zlib [installable as 'apt-get install zlib1g-dev' on Ubuntu].)\n" % e)
-            raise
-        except OSError as e:
-            sys.stderr.write("Unable to execute '{}'. HINT: are you sure `make` is installed?\n".format(' '.join(cmd)))
-            raise
-        DistutilsBuild.run(self)
+# Force linker to produce a shared library
+class build_ext(_build_ext):
+    if sys.platform.startswith('linux'):
+        def get_ext_filename(self, fullname):
+            import setuptools.command.build_ext
+            tmp = setuptools.command.build_ext.libtype
+            setuptools.command.build_ext.libtype = 'shared'
+            ret = _build_ext.get_ext_filename(self, fullname)
+            setuptools.command.build_ext.libtype = tmp
+            return ret
+
+    def setup_shlib_compiler(self):
+        _build_ext.setup_shlib_compiler(self)
+        if sys.platform == 'win32':
+            from distutils.ccompiler import CCompiler
+            mtd = CCompiler.link_shared_object.__get__(self.shlib_compiler)
+            self.shlib_compiler.link_shared_object = mtd
+        elif sys.platform.startswith('linux'):
+            from functools import partial
+            c = self.shlib_compiler
+            c.link_shared_object = partial(c.link, c.SHARED_LIBRARY)
+
+
+def list_files(path):
+    for root, dirs, files in os.walk(path):
+        for fname in files:
+            yield os.path.join(root, fname)
+
+        for dirname in dirs:
+            for rpath in list_files(os.path.join(root, dirname)):
+                yield rpath
+
+
+basepath = os.path.normpath(r'atari_py/ale_interface/src')
+modules = [os.path.join(basepath, os.path.normpath(path))
+           for path in 'common controllers emucore emucore/m6502/src '
+                       'emucore/m6502/src/bspf/src environment games '
+                       'games/supported external external/TinyMT'.split()]
+defines = []
+sources = [os.path.join('atari_py', 'ale_c_wrapper.cpp'),
+           os.path.join(basepath, 'ale_interface.cpp')]
+includes = ['atari_py', basepath, os.path.join(basepath, 'os_dependent')]
+includes += modules
+
+for folder in modules:
+    sources += glob.glob(os.path.join(folder, '*.c'))
+    sources += glob.glob(os.path.join(folder, '*.c?[xp]'))
+
+if sys.platform.startswith('linux'):
+    defines.append(('BSPF_UNIX', None))
+    for fname in 'SettingsUNIX.cxx OSystemUNIX.cxx FSNodePOSIX.cxx'.split():
+        sources.append(os.path.join(basepath, 'os_dependent', fname))
+elif sys.platform == "darwin":
+    defines.append(('BSPF_MAC_OSX', None))
+    includes.append(
+        '/System/Library/Frameworks/vecLib.framework/Versions/Current/Headers')
+elif sys.platform == "win32":
+    defines.append(('BSPF_WIN32', None))
+    for fname in 'SettingsWin32.cxx OSystemWin32.cxx FSNodeWin32.cxx'.split():
+        sources.append(os.path.join(basepath, 'os_dependent', fname))
+
+
+def rglob(path, pattern):
+    return fnmatch.filter(list_files(path), pattern)
+
+
+def find_include_dirs(root, fname):
+    return {os.path.dirname(path)
+            for path in rglob(root, '*' + fname)}
+
+
+library_dirs = []
+zlib_root = os.environ.get('ZLIB_ROOT')
+if zlib_root is not None:
+    import fnmatch
+
+    zlib_includes = []
+
+    zlib_dirs = find_include_dirs(zlib_root, 'zlib.h')
+    if not zlib_dirs:
+        raise ValueError("Failed to find 'zlib.h' under ZLIB_ROOT folder. "
+                         "It looks like there is no zlib in supplied path.")
+    zlib_includes += zlib_dirs
+
+    zconf_dirs = find_include_dirs(zlib_root, 'zconf.h')
+    if not zlib_includes:
+        raise ValueError("Failed to find 'zconf.h' under ZLIB_ROOT folder. "
+                         "Have you compiled zlib?")
+    zlib_includes += zconf_dirs
+    includes += zlib_includes
+
+    zlib_libraries = set()
+
+    # Try to compile a test program against zlib
+    from distutils.ccompiler import get_default_compiler, new_compiler
+    compiler = new_compiler(compiler=get_default_compiler())
+    ext = compiler.static_lib_extension
+
+    if os.name == 'nt':
+        zlib_name = 'zlib'
+    else:
+        zlib_name = 'libz'
+    zlib_lib_pattern = '%s*%s' % (zlib_name, ext)
+
+    import tempfile
+    from distutils.ccompiler import CompileError, LinkError
+    tmp_dir = tempfile.mkdtemp()
+    src_path = os.path.join(tmp_dir, 'zlibtest.c')
+    with open(src_path, 'w') as f:
+        f.write("#include <zlib.h>\nint main() { inflate(0, 0); return 0; }")
+    try:
+        for i, path in enumerate(rglob(zlib_root, '*' + zlib_lib_pattern)):
+            tmp_dir_i = os.path.join(tmp_dir, str(i))
+            zlib_library = os.path.splitext(os.path.basename(path))[0]
+            zlib_library_dir = os.path.dirname(path)
+            try:
+                objects = compiler.compile([src_path], tmp_dir_i,
+                                           include_dirs=zlib_includes)
+                compiler.link_executable(objects, 'zlibtest', tmp_dir_i,
+                                         libraries=[zlib_library],
+                                         library_dirs=[zlib_library_dir])
+            except (CompileError, LinkError) as e:
+                pass  # skip this library as malformed
+            else:
+                zlib_libraries.add((zlib_library, zlib_library_dir))
+    finally:
+        import shutil
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    if not zlib_libraries:
+        raise ValueError("Failed to find a suitable library (%s) under "
+                         "ZLIB_ROOT folder. Have you compiled zlib?"
+                         % zlib_lib_pattern)
+
+    # Priority to static library (Windows)
+    for zlib_library, zlib_library_dir in zlib_libraries:
+        if 'static' in zlib_library:
+            break
+    library_dirs.append(zlib_library_dir)
+else:
+    if os.name == 'nt':
+        zlib_library = 'zlib'
+    else:
+        zlib_library = 'z'
+
+
+ale_c = Library('ale_c',
+                define_macros=defines,
+                sources=sources,
+                include_dirs=includes,
+                libraries=[zlib_library],
+                library_dirs=library_dirs,
+                )
+
 
 setup(name='atari-py',
       version='0.0.19',
@@ -30,8 +169,9 @@ setup(name='atari-py',
       author_email='info@openai.com',
       license='',
       packages=['atari_py'],
-      package_data={'atari_py': package_data},
-      cmdclass={'build': Build},
+      package_data={'atari_py': ['atari_roms/*']},
+      cmdclass={'build_ext': build_ext},
+      ext_modules=[ale_c],
       install_requires=['numpy', 'six'],
       tests_require=['nose2']
-)
+      )

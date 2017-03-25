@@ -34,7 +34,10 @@ inline uInt32 convertGrayscale(uInt32 packedRGBValue)
     double g = (packedRGBValue >> 8)  & 0xff;
     double b = (packedRGBValue >> 0)  & 0xff;
 
-    uInt8 lum = (uInt8) round(r * 0.2989 + g * 0.5870 + b * 0.1140 );
+    // `round` is the part of c++11, but we have to support c++98
+    // because of python2. As we have unsigend values here it is safe
+    // to replace `round` call with +0.5 which is equal in this case.
+    uInt8 lum = (uInt8) (r * 0.2989 + g * 0.5870 + b * 0.1140 + 0.5);
 
     return packRGB(lum, lum, lum);
 }

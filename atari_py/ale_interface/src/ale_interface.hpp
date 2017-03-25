@@ -32,10 +32,13 @@
 
 #include "emucore/FSNode.hxx"
 #include "emucore/OSystem.hxx"
-#include "os_dependent/SettingsWin32.hxx"
-#include "os_dependent/OSystemWin32.hxx"
-#include "os_dependent/SettingsUNIX.hxx"
-#include "os_dependent/OSystemUNIX.hxx"
+#if (defined(_WIN32) || defined(__MINGW32__))
+#   include "os_dependent/SettingsWin32.hxx"
+#   include "os_dependent/OSystemWin32.hxx"
+#else
+#   include "os_dependent/SettingsUNIX.hxx"
+#   include "os_dependent/OSystemUNIX.hxx"
+#endif
 #include "games/Roms.hpp"
 #include "common/Defaults.hpp"
 #include "common/display_screen.h"

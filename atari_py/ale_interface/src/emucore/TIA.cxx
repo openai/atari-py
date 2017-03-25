@@ -34,6 +34,15 @@ using namespace std;
 
 #define HBLANK 68
 
+// c++98 compatibility
+#if !defined(__intptr_t_defined) && !defined(_UINTPTR_T_DEFINED) && !defined(uintptr_t)
+# if __WORDSIZE == 64
+typedef unsigned long int       uintptr_t;
+# else
+typedef unsigned int            uintptr_t;
+# endif
+#endif
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 TIA::TIA(const Console& console, Settings& settings)
     : myConsole(console),

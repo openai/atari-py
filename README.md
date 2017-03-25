@@ -21,5 +21,7 @@ this repo to your `PYTHONPATH`:
 
 ### Common issues
 
-- Make sure you have `cmake` installed. On OSX, you probably want
-  `brew install cmake`.
+- If `zlib` cannot be found by compiler - check if it is installed in your
+  system. You can provide `zlib` path by setting `ZLIB_ROOT` environment
+  variable or directly to `pip` like this:
+  `pip install --global-option=build_ext --global-option="-L/path/to/zlib/lib" --global-option="-I/path/to/zlib/include" atari-py`

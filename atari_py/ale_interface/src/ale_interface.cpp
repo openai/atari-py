@@ -54,7 +54,7 @@ void ALEInterface::disableBufferedIO() {
 
 void ALEInterface::createOSystem(std::auto_ptr<OSystem> &theOSystem,
                           std::auto_ptr<Settings> &theSettings) {
-#if (defined(WIN32) || defined(__MINGW32__))
+#if (defined(_WIN32) || defined(__MINGW32__))
   theOSystem.reset(new OSystemWin32());
   theSettings.reset(new SettingsWin32(theOSystem.get()));
 #else

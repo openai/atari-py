@@ -12,7 +12,8 @@
 #include "FishingDerby.hpp"
 
 #include "../RomUtils.hpp"
-using namespace std;
+
+#include <algorithm>
 
 
 FishingDerbySettings::FishingDerbySettings() {
@@ -34,8 +35,8 @@ RomSettings* FishingDerbySettings::clone() const {
 void FishingDerbySettings::step(const System& system) {
 
     // update the reward
-    int my_score   = max(getDecimalScore(0xBD, &system), 0);
-    int oppt_score = max(getDecimalScore(0xBE, &system), 0);
+    int my_score   = (std::max)(getDecimalScore(0xBD, &system), 0);
+    int oppt_score = (std::max)(getDecimalScore(0xBE, &system), 0);
     int score = my_score - oppt_score;
     m_reward = score - m_score;
     m_score = score;
