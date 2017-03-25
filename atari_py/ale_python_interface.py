@@ -238,7 +238,7 @@ class ALEInterface(object):
         return ram
 
     def saveScreenPNG(self, filename):
-        return ale_lib.saveScreenPNG(self.obj, filename)
+        return ale_lib.saveScreenPNG(self.obj, six.b(filename))
 
     def saveState(self):
         return ale_lib.saveState(self.obj)
