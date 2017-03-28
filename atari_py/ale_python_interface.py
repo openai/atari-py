@@ -24,7 +24,7 @@ ale_lib.getBool.argtypes = [c_void_p, c_char_p]
 ale_lib.getBool.restype = c_bool
 ale_lib.getFloat.argtypes = [c_void_p, c_char_p]
 ale_lib.getFloat.restype = c_float
-ale_lib.setString.argtypes = [c_void_p, c_char_p, c_int]
+ale_lib.setString.argtypes = [c_void_p, c_char_p, c_char_p]
 ale_lib.setString.restype = None
 ale_lib.setInt.argtypes = [c_void_p, c_char_p, c_int]
 ale_lib.setInt.restype = None
@@ -119,22 +119,22 @@ class ALEInterface(object):
         self.obj = ale_lib.ALE_new()
 
     def getString(self, key):
-        return ale_lib.getString(self.obj, key)
+        return ale_lib.getString(self.obj, six.b(key))
     def getInt(self, key):
-        return ale_lib.getInt(self.obj, key)
+        return ale_lib.getInt(self.obj, six.b(key))
     def getBool(self, key):
-        return ale_lib.getBool(self.obj, key)
+        return ale_lib.getBool(self.obj, six.b(key))
     def getFloat(self, key):
-        return ale_lib.getFloat(self.obj, key)
+        return ale_lib.getFloat(self.obj, six.b(key))
 
     def setString(self, key, value):
-      ale_lib.setString(self.obj, key, value)
+      ale_lib.setString(self.obj, six.b(key), six.b(value))
     def setInt(self, key, value):
-      ale_lib.setInt(self.obj, key, value)
+      ale_lib.setInt(self.obj, six.b(key), int(value))
     def setBool(self, key, value):
-      ale_lib.setBool(self.obj, key, value)
+      ale_lib.setBool(self.obj, six.b(key), bool(value))
     def setFloat(self, key, value):
-      ale_lib.setFloat(self.obj, key, value)
+      ale_lib.setFloat(self.obj, six.b(key), float(value))
 
     def loadROM(self, rom_file):
         ale_lib.loadROM(self.obj, six.b(rom_file))
