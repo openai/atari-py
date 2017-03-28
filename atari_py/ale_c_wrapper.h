@@ -58,11 +58,28 @@ extern "C" {
     size_t screen_size = w*h;
     pixel_t *ale_screen_data = ale->getScreen().getArray();
 
-    for(int i = 0;i < w*h;i++){
+    for(int i = 0;i < screen_size;i++){
         output_buffer[i] = rgb_palette[ale_screen_data[i]];
     }
 
   }
+
+  void getScreenRGB2(ALEInterface *ale, unsigned char *output_buffer){
+    size_t w = ale->getScreen().width();
+    size_t h = ale->getScreen().height();
+    size_t screen_size = w*h;
+    pixel_t *ale_screen_data = ale->getScreen().getArray();
+
+    int j = 0;
+    for(int i = 0;i < screen_size;i++){
+        unsigned int zrgb = rgb_palette[ale_screen_data[i]];
+        output_buffer[j++] = (zrgb>>16)&0xff;
+        output_buffer[j++] = (zrgb>>8)&0xff;
+        output_buffer[j++] = (zrgb>>0)&0xff;
+    }
+
+  }
+
 
   void getScreenGrayscale(ALEInterface *ale, unsigned char *output_buffer){
     size_t w = ale->getScreen().width();
