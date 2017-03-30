@@ -114,30 +114,35 @@ class ALEState(object):
     def episode_frame_number(self):
         return ale_lib.ALEState_getEpisodeFrameNumber(self.obj)
 
+def _as_bytes(s):
+    if hasattr(s, 'encode'):
+        return s.encode('utf8')
+    return s
+
 class ALEInterface(object):
     def __init__(self):
         self.obj = ale_lib.ALE_new()
 
     def getString(self, key):
-        return ale_lib.getString(self.obj, six.b(key))
+        return ale_lib.getString(self.obj, _as_bytes(key))
     def getInt(self, key):
-        return ale_lib.getInt(self.obj, six.b(key))
+        return ale_lib.getInt(self.obj, _as_bytes(key))
     def getBool(self, key):
-        return ale_lib.getBool(self.obj, six.b(key))
+        return ale_lib.getBool(self.obj, _as_bytes(key))
     def getFloat(self, key):
-        return ale_lib.getFloat(self.obj, six.b(key))
+        return ale_lib.getFloat(self.obj, _as_bytes(key))
 
     def setString(self, key, value):
-      ale_lib.setString(self.obj, six.b(key), six.b(value))
+      ale_lib.setString(self.obj, _as_bytes(key), _as_bytes(value))
     def setInt(self, key, value):
-      ale_lib.setInt(self.obj, six.b(key), int(value))
+      ale_lib.setInt(self.obj, _as_bytes(key), int(value))
     def setBool(self, key, value):
-      ale_lib.setBool(self.obj, six.b(key), bool(value))
+      ale_lib.setBool(self.obj, _as_bytes(key), bool(value))
     def setFloat(self, key, value):
-      ale_lib.setFloat(self.obj, six.b(key), float(value))
+      ale_lib.setFloat(self.obj, _as_bytes(key), float(value))
 
     def loadROM(self, rom_file):
-        ale_lib.loadROM(self.obj, six.b(rom_file))
+        ale_lib.loadROM(self.obj, _as_bytes(rom_file))
 
     def act(self, action):
         return ale_lib.act(self.obj, int(action))
@@ -259,7 +264,7 @@ class ALEInterface(object):
         return ram
 
     def saveScreenPNG(self, filename):
-        return ale_lib.saveScreenPNG(self.obj, six.b(filename))
+        return ale_lib.saveScreenPNG(self.obj, _as_bytes(filename))
 
     def saveState(self):
         return ale_lib.saveState(self.obj)
