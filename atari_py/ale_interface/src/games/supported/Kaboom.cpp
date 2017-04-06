@@ -38,7 +38,7 @@ void KaboomSettings::step(const System& system) {
 
     // update terminal status
     int lives = readRam(&system, 0xA1);
-    m_terminal = lives == 0x0 || m_score > 999991;
+    m_terminal = lives == 0x0 || m_score == 999999;
 }
 
 
@@ -59,6 +59,7 @@ reward_t KaboomSettings::getReward() const {
 bool KaboomSettings::isMinimal(const Action &a) const {
 
     switch (a) {
+        case PLAYER_A_FIRE:
         case PLAYER_A_NOOP:
         case PLAYER_A_RIGHT:
         case PLAYER_A_LEFT:
