@@ -44,10 +44,17 @@ class StellaEnvironment {
     void save();
     void load();
 
-    /** Returns a copy of the current emulator state. */
+    /** Returns a copy of the current emulator state. Note that this doesn't include
+        pseudorandomness, so that clone/restoreState are suitable for planning. */
     ALEState cloneState();
     /** Restores a previously saved copy of the state. */
     void restoreState(const ALEState&);
+
+    /** Returns a copy of the current emulator state. This includes RNG state information, and
+        more generally should lead to exactly reproducibility. */
+    ALEState cloneSystemState();
+    /** Restores a previously saved copy of the state, including RNG state information. */
+    void restoreSystemState(const ALEState&);
 
     /** Applies the given actions (e.g. updating paddle positions when the paddle is used)
       *  and performs one simulation step in Stella. Returns the resultant reward. When 
@@ -58,7 +65,7 @@ class StellaEnvironment {
     reward_t act(Action player_a_action, Action player_b_action);
 
     /** Returns true once we reach a terminal state */
-    bool isTerminal();
+    bool isTerminal() const;
 
     /** Accessor methods for the environment state. */
     void setState(const ALEState & state);
@@ -90,7 +97,7 @@ class StellaEnvironment {
   private:
     OSystem *m_osystem;
     RomSettings *m_settings;
-    // PhosphorBlend m_phosphor_blend; // For performing phosphor colour averaging, if so desired
+    PhosphorBlend m_phosphor_blend; // For performing phosphor colour averaging, if so desired
     std::string m_cartridge_md5; // Necessary for saving and loading emulator state
 
     std::stack<ALEState> m_saved_states; // States are saved on a stack
@@ -108,7 +115,6 @@ class StellaEnvironment {
     size_t m_frame_skip; // How many frames to emulate per act()
     float m_repeat_action_probability; // Stochasticity of the environment
     std::auto_ptr<ScreenExporter> m_screen_exporter; // Automatic screen recorder
-    Random m_rand_gen;
 
     // The last actions taken by our players
     Action m_player_a_action, m_player_b_action;

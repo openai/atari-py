@@ -22,7 +22,7 @@
 StellaEnvironment::StellaEnvironment(OSystem* osystem, RomSettings* settings):
   m_osystem(osystem),
   m_settings(settings),
-  // m_phosphor_blend(osystem),  
+  m_phosphor_blend(osystem),  
   m_screen(m_osystem->console().mediaSource().height(),
         m_osystem->console().mediaSource().width()),
   m_player_a_action(PLAYER_A_NOOP),
@@ -103,17 +103,20 @@ void StellaEnvironment::load() {
   m_saved_states.pop();
 }
 
-/** Returns a copy of the current emulator state. */
 ALEState StellaEnvironment::cloneState() {
-  return m_state.save(m_osystem, m_settings, m_cartridge_md5);
+  return m_state.save(m_osystem, m_settings, m_cartridge_md5, false);
 }
 
-/** Restores a previously saved copy of the state. */
 void StellaEnvironment::restoreState(const ALEState& target_state) {
-  m_state.load(m_osystem, m_settings, m_cartridge_md5, target_state);
-  m_osystem->console().mediaSource().update();
-  processScreen();
-  processRAM();
+  m_state.load(m_osystem, m_settings, m_cartridge_md5, target_state, false);
+}
+
+ALEState StellaEnvironment::cloneSystemState() {
+  return m_state.save(m_osystem, m_settings, m_cartridge_md5, true);
+}
+
+void StellaEnvironment::restoreSystemState(const ALEState& target_state) {
+  m_state.load(m_osystem, m_settings, m_cartridge_md5, target_state, true);
 }
 
 void StellaEnvironment::noopIllegalActions(Action & player_a_action, Action & player_b_action) {
@@ -134,31 +137,34 @@ void StellaEnvironment::noopIllegalActions(Action & player_a_action, Action & pl
 }
 
 reward_t StellaEnvironment::act(Action player_a_action, Action player_b_action) {
-
+  
   // Total reward received as we repeat the action
   reward_t sum_rewards = 0;
+
+  Random& rng = m_osystem->rng();
 
   // Apply the same action for a given number of times... note that act() will refuse to emulate 
   //  past the terminal state
   for (size_t i = 0; i < m_frame_skip; i++) {
     
     // Stochastically drop actions, according to m_repeat_action_probability
-    if (m_rand_gen.nextDouble() >= m_repeat_action_probability)
+    if (rng.nextDouble() >= m_repeat_action_probability)
       m_player_a_action = player_a_action;
     // @todo Possibly optimize by avoiding call to rand() when player B is "off" ?
-    if (m_rand_gen.nextDouble() >= m_repeat_action_probability)
+    if (rng.nextDouble() >= m_repeat_action_probability)
       m_player_b_action = player_b_action;
 
     // If so desired, request one frame's worth of sound (this does nothing if recording
     // is not enabled)
     m_osystem->sound().recordNextFrame();
 
+    // Similarly record screen as needed
+    if (m_screen_exporter.get() != NULL)
+        m_screen_exporter->saveNext(m_screen);
+
     // Use the stored actions, which may or may not have changed this frame
     sum_rewards += oneStepAct(m_player_a_action, m_player_b_action);
   }
-
-  if (m_screen_exporter.get() != NULL)
-    m_screen_exporter->saveNext(m_screen);
 
   return sum_rewards;
 }
@@ -183,7 +189,7 @@ reward_t StellaEnvironment::oneStepAct(Action player_a_action, Action player_b_a
   return m_settings->getReward();
 }
 
-bool StellaEnvironment::isTerminal() {
+bool StellaEnvironment::isTerminal() const {
   return (m_settings->isTerminal() || 
     (m_max_num_frames_per_episode > 0 && 
      m_state.getEpisodeFrameNumber() >= m_max_num_frames_per_episode));
@@ -230,8 +236,7 @@ const ALEState& StellaEnvironment::getState() const {
 void StellaEnvironment::processScreen() {
   if (m_colour_averaging) {
     // Perform phosphor averaging; the blender stores its result in the given screen
-    // m_phosphor_blend.process(m_screen);
-    abort();
+    m_phosphor_blend.process(m_screen);
   }
   else {
     // Copy screen over and we're done! 
