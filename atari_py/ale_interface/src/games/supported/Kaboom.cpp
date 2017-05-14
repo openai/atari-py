@@ -59,6 +59,7 @@ reward_t KaboomSettings::getReward() const {
 bool KaboomSettings::isMinimal(const Action &a) const {
 
     switch (a) {
+        case PLAYER_A_FIRE:
         case PLAYER_A_NOOP:
         case PLAYER_A_FIRE:
         case PLAYER_A_RIGHT:
