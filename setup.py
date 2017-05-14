@@ -23,7 +23,7 @@ class Build(DistutilsBuild):
         DistutilsBuild.run(self)
 
 setup(name='atari-py',
-      version='0.1.0',
+      version='0.1.1',
       description='Python bindings to Atari games',
       url='https://github.com/openai/atari-py',
       author='OpenAI',
