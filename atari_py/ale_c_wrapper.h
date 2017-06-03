@@ -52,16 +52,28 @@ extern "C" {
   int getScreenWidth(ALEInterface *ale){return ale->getScreen().width();}
   int getScreenHeight(ALEInterface *ale){return ale->getScreen().height();}
 
-  void getScreenRGB(ALEInterface *ale, int *output_buffer){
+  void getScreenRGB(ALEInterface *ale, unsigned char *output_buffer){
     size_t w = ale->getScreen().width();
     size_t h = ale->getScreen().height();
     size_t screen_size = w*h;
     pixel_t *ale_screen_data = ale->getScreen().getArray();
 
-    for(int i = 0;i < w*h;i++){
-        output_buffer[i] = rgb_palette[ale_screen_data[i]];
-    }
+    ale->theOSystem->colourPalette().applyPaletteRGB(output_buffer, ale_screen_data, screen_size);
+  }
 
+  void getScreenRGB2(ALEInterface *ale, unsigned char *output_buffer){
+    size_t w = ale->getScreen().width();
+    size_t h = ale->getScreen().height();
+    size_t screen_size = w*h;
+    pixel_t *ale_screen_data = ale->getScreen().getArray();
+
+    int j = 0;
+    for(int i = 0;i < screen_size;i++){
+        unsigned int zrgb = rgb_palette[ale_screen_data[i]];
+        output_buffer[j++] = (zrgb>>16)&0xff;
+        output_buffer[j++] = (zrgb>>8)&0xff;
+        output_buffer[j++] = (zrgb>>0)&0xff;
+    }
   }
 
   void getScreenGrayscale(ALEInterface *ale, unsigned char *output_buffer){
@@ -75,32 +87,22 @@ extern "C" {
 
   void saveState(ALEInterface *ale){ale->saveState();}
   void loadState(ALEInterface *ale){ale->loadState();}
+  ALEState* cloneState(ALEInterface *ale){return new ALEState(ale->cloneState());}
+  void restoreState(ALEInterface *ale, ALEState* state){ale->restoreState(*state);}
+  ALEState* cloneSystemState(ALEInterface *ale){return new ALEState(ale->cloneSystemState());}
+  void restoreSystemState(ALEInterface *ale, ALEState* state){ale->restoreSystemState(*state);}
+  void deleteState(ALEState* state){delete state;}
   void saveScreenPNG(ALEInterface *ale,const char *filename){ale->saveScreenPNG(filename);}
 
-  ALEState* cloneState(ALEInterface *ale) {
-    return new ALEState(ale->cloneState());
-  }
+  // Encodes the state as a raw bytestream. This may have multiple '\0' characters
+  // and thus should not be treated as a C string. Use encodeStateLen to find the length
+  // of the buffer to pass in, or it will be overrun as this simply memcpys bytes into the buffer.
+  void encodeState(ALEState *state, char *buf, int buf_len);
+  int encodeStateLen(ALEState *state);
+  ALEState *decodeState(const char *serialized, int len);
 
-  void ALEState_del(ALEState* state) {
-    delete state;
-  }
-
-  void restoreState(ALEInterface *ale, ALEState* state) {
-    ale->restoreState(*state);
-  }
-
-  int ALEState_getFrameNumber(ALEState* state) {
-    return state->getFrameNumber();
-  }
-
-  int ALEState_getEpisodeFrameNumber(ALEState* state) {
-    return state->getEpisodeFrameNumber();
-  }
-
-  bool ALEState_equals(ALEState* a, ALEState *b) {
-    return a->equals(*b);
-  }
-
+  // 0: Info, 1: Warning, 2: Error
+  void setLoggerMode(int mode) { ale::Logger::setMode(ale::Logger::mode(mode)); }
 }
 
 #endif

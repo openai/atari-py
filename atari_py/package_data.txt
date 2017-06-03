@@ -4,10 +4,6 @@ ale_c_wrapper.cpp
 ale_c_wrapper.h
 ale_interface/CMakeLists.txt
 ale_interface/Makefile
-ale_interface/common.rules
-ale_interface/makefile.mac
-ale_interface/makefile.unix
-ale_interface/setup.sh
 ale_interface/src/ale_interface.cpp
 ale_interface/src/ale_interface.hpp
 ale_interface/src/common/Array.hxx
@@ -15,8 +11,6 @@ ale_interface/src/common/ColourPalette.cpp
 ale_interface/src/common/ColourPalette.hpp
 ale_interface/src/common/Constants.cpp
 ale_interface/src/common/Constants.h
-ale_interface/src/common/Defaults.cpp
-ale_interface/src/common/Defaults.hpp
 ale_interface/src/common/Log.cpp
 ale_interface/src/common/Log.hpp
 ale_interface/src/common/Palettes.hpp
@@ -33,14 +27,12 @@ ale_interface/src/common/VideoModeList.hxx
 ale_interface/src/common/display_screen.cpp
 ale_interface/src/common/display_screen.h
 ale_interface/src/common/misc_tools.h
-ale_interface/src/common/module.mk
 ale_interface/src/common/stella.png
 ale_interface/src/common/stella.xpm
 ale_interface/src/controllers/ale_controller.cpp
 ale_interface/src/controllers/ale_controller.hpp
 ale_interface/src/controllers/fifo_controller.cpp
 ale_interface/src/controllers/fifo_controller.hpp
-ale_interface/src/controllers/module.mk
 ale_interface/src/controllers/rlglue_controller.cpp
 ale_interface/src/controllers/rlglue_controller.hpp
 ale_interface/src/emucore/AtariVox.cxx
@@ -141,7 +133,6 @@ ale_interface/src/emucore/TIASnd.cxx
 ale_interface/src/emucore/TIASnd.hxx
 ale_interface/src/emucore/m6502/Copyright.txt
 ale_interface/src/emucore/m6502/License.txt
-ale_interface/src/emucore/m6502/module.mk
 ale_interface/src/emucore/m6502/src/Device.cxx
 ale_interface/src/emucore/m6502/src/Device.hxx
 ale_interface/src/emucore/m6502/src/M6502.cxx
@@ -162,7 +153,6 @@ ale_interface/src/emucore/m6502/src/System.hxx
 ale_interface/src/emucore/m6502/src/bspf/Copyright.txt
 ale_interface/src/emucore/m6502/src/bspf/License.txt
 ale_interface/src/emucore/m6502/src/bspf/src/bspf.hxx
-ale_interface/src/emucore/module.mk
 ale_interface/src/emucore/rsynth/COPYING
 ale_interface/src/emucore/rsynth/Elements.def
 ale_interface/src/emucore/rsynth/PORTING
@@ -172,7 +162,6 @@ ale_interface/src/emucore/rsynth/darray.h
 ale_interface/src/emucore/rsynth/elements.c
 ale_interface/src/emucore/rsynth/holmes.c
 ale_interface/src/emucore/rsynth/kmap
-ale_interface/src/emucore/rsynth/module.mk
 ale_interface/src/emucore/rsynth/opsynth.c
 ale_interface/src/emucore/rsynth/phfeat.h
 ale_interface/src/emucore/rsynth/phones.c
@@ -192,7 +181,6 @@ ale_interface/src/environment/ale_ram.hpp
 ale_interface/src/environment/ale_screen.hpp
 ale_interface/src/environment/ale_state.cpp
 ale_interface/src/environment/ale_state.hpp
-ale_interface/src/environment/module.mk
 ale_interface/src/environment/phosphor_blend.cpp
 ale_interface/src/environment/phosphor_blend.hpp
 ale_interface/src/environment/stella_environment.cpp
@@ -200,14 +188,14 @@ ale_interface/src/environment/stella_environment.hpp
 ale_interface/src/external/TinyMT/LICENSE.txt
 ale_interface/src/external/TinyMT/tinymt32.c
 ale_interface/src/external/TinyMT/tinymt32.h
-ale_interface/src/external/module.mk
 ale_interface/src/games/RomSettings.cpp
 ale_interface/src/games/RomSettings.hpp
 ale_interface/src/games/RomUtils.cpp
 ale_interface/src/games/RomUtils.hpp
 ale_interface/src/games/Roms.cpp
 ale_interface/src/games/Roms.hpp
-ale_interface/src/games/module.mk
+ale_interface/src/games/supported/Adventure.cpp
+ale_interface/src/games/supported/Adventure.hpp
 ale_interface/src/games/supported/AirRaid.cpp
 ale_interface/src/games/supported/AirRaid.hpp
 ale_interface/src/games/supported/Alien.cpp
@@ -272,6 +260,8 @@ ale_interface/src/games/supported/JamesBond.cpp
 ale_interface/src/games/supported/JamesBond.hpp
 ale_interface/src/games/supported/JourneyEscape.cpp
 ale_interface/src/games/supported/JourneyEscape.hpp
+ale_interface/src/games/supported/Kaboom.cpp
+ale_interface/src/games/supported/Kaboom.hpp
 ale_interface/src/games/supported/Kangaroo.cpp
 ale_interface/src/games/supported/Kangaroo.hpp
 ale_interface/src/games/supported/Krull.cpp
@@ -331,7 +321,6 @@ ale_interface/src/games/supported/YarsRevenge.hpp
 ale_interface/src/games/supported/Zaxxon.cpp
 ale_interface/src/games/supported/Zaxxon.hpp
 ale_interface/src/main.cpp
-ale_interface/src/module.mk
 ale_interface/src/os_dependent/FSNodePOSIX.cxx
 ale_interface/src/os_dependent/FSNodeWin32.cxx
 ale_interface/src/os_dependent/OSystemUNIX.cxx
@@ -342,9 +331,8 @@ ale_interface/src/os_dependent/SettingsUNIX.cxx
 ale_interface/src/os_dependent/SettingsUNIX.hxx
 ale_interface/src/os_dependent/SettingsWin32.cxx
 ale_interface/src/os_dependent/SettingsWin32.hxx
-ale_interface/src/os_dependent/module.mk
-ale_interface/stellarc
 atari_ntsc_rgb_palette.h
+atari_roms/adventure.bin
 atari_roms/air_raid.bin
 atari_roms/alien.bin
 atari_roms/amidar.bin
@@ -373,9 +361,11 @@ atari_roms/freeway.bin
 atari_roms/frostbite.bin
 atari_roms/gopher.bin
 atari_roms/gravitar.bin
+atari_roms/hero.bin
 atari_roms/ice_hockey.bin
 atari_roms/jamesbond.bin
 atari_roms/journey_escape.bin
+atari_roms/kaboom.bin
 atari_roms/kangaroo.bin
 atari_roms/krull.bin
 atari_roms/kung_fu_master.bin

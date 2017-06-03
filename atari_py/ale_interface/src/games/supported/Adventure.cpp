@@ -1,5 +1,4 @@
 /* *****************************************************************************
- * The lines 61, 101, 113 and 122 are based on Xitari's code, from Google Inc.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -24,99 +23,100 @@
  *
  * *****************************************************************************
  */
-#include "Breakout.hpp"
+#include "Adventure.hpp"
 
 #include "../RomUtils.hpp"
 
+AdventureSettings::AdventureSettings() {
 
-BreakoutSettings::BreakoutSettings() {
-
-    reset();
+  reset();
 }
-
 
 /* create a new instance of the rom */
-RomSettings* BreakoutSettings::clone() const { 
-    
-    RomSettings* rval = new BreakoutSettings();
-    *rval = *this;
-    return rval;
-}
+RomSettings* AdventureSettings::clone() const {
 
+  RomSettings* rval = new AdventureSettings();
+  *rval = *this;
+  return rval;
+}
 
 /* process the latest information from ALE */
-void BreakoutSettings::step(const System& system) {
+void AdventureSettings::step(const System& system) {
 
-    // update the reward
-    int x = readRam(&system, 77);
-    int y = readRam(&system, 76);
-    reward_t score = 1 * (x & 0x000F) + 10 * ((x & 0x00F0) >> 4) + 100 * (y & 0x000F);
-    m_reward = score - m_score;
-    m_score = score;
+  int chalice_status = readRam(&system, 0xB9);
+  bool chalice_in_yellow_castle = chalice_status == 0x12;
 
-    // update terminal status
-    int byte_val = readRam(&system, 57);
-    if (!m_started && byte_val == 5) m_started = true;
-    m_terminal = m_started && byte_val == 0;
-    m_lives = byte_val;
+  if (chalice_in_yellow_castle) {
+    m_reward = 1;
+  }
+
+  int player_status = readRam(&system, 0xE0);
+  bool player_eaten = player_status == 2;
+
+  if (player_eaten) {
+    m_reward = -1;
+  }
+
+  m_terminal = player_eaten || chalice_in_yellow_castle;
 }
-
 
 /* is end of game */
-bool BreakoutSettings::isTerminal() const {
+bool AdventureSettings::isTerminal() const {
 
-    return m_terminal;
-};
-
+  return m_terminal;
+}
+;
 
 /* get the most recently observed reward */
-reward_t BreakoutSettings::getReward() const { 
+reward_t AdventureSettings::getReward() const {
 
-    return m_reward; 
+  return m_reward;
 }
-
 
 /* is an action part of the minimal set? */
-bool BreakoutSettings::isMinimal(const Action &a) const {
+bool AdventureSettings::isMinimal(const Action &a) const {
 
-    switch (a) {
-        case PLAYER_A_NOOP:
-        case PLAYER_A_FIRE:
-        case PLAYER_A_RIGHT:
-        case PLAYER_A_LEFT:
-            return true;
-        default:
-            return false;
-    }   
+  switch (a) {
+  case PLAYER_A_NOOP:
+  case PLAYER_A_FIRE:
+  case PLAYER_A_UP:
+  case PLAYER_A_RIGHT:
+  case PLAYER_A_LEFT:
+  case PLAYER_A_DOWN:
+  case PLAYER_A_UPRIGHT:
+  case PLAYER_A_UPLEFT:
+  case PLAYER_A_DOWNRIGHT:
+  case PLAYER_A_DOWNLEFT:
+  case PLAYER_A_UPFIRE:
+  case PLAYER_A_RIGHTFIRE:
+  case PLAYER_A_LEFTFIRE:
+  case PLAYER_A_DOWNFIRE:
+  case PLAYER_A_UPRIGHTFIRE:
+  case PLAYER_A_UPLEFTFIRE:
+  case PLAYER_A_DOWNRIGHTFIRE:
+  case PLAYER_A_DOWNLEFTFIRE:
+    return true;
+  default:
+    return false;
+  }
 }
-
 
 /* reset the state of the game */
-void BreakoutSettings::reset() {
-    
-    m_reward   = 0;
-    m_score    = 0;
-    m_lives    = 5;
-    m_terminal = false;
-    m_started  = false;
+void AdventureSettings::reset() {
+
+  m_reward = 0;
+  m_terminal = false;
 }
 
-        
 /* saves the state of the rom settings */
-void BreakoutSettings::saveState(Serializer & ser) {
+void AdventureSettings::saveState(Serializer & ser) {
   ser.putInt(m_reward);
-  ser.putInt(m_score);
   ser.putBool(m_terminal);
-  ser.putBool(m_started);
-  ser.putInt(m_lives);
 }
 
 // loads the state of the rom settings
-void BreakoutSettings::loadState(Deserializer & ser) {
+void AdventureSettings::loadState(Deserializer & ser) {
   m_reward = ser.getInt();
-  m_score = ser.getInt();
   m_terminal = ser.getBool();
-  m_started = ser.getBool();
-  m_lives = ser.getInt();
 }
 

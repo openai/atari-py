@@ -37,7 +37,6 @@
 #include "os_dependent/SettingsUNIX.hxx"
 #include "os_dependent/OSystemUNIX.hxx"
 #include "games/Roms.hpp"
-#include "common/Defaults.hpp"
 #include "common/display_screen.h"
 #include "environment/stella_environment.hpp"
 #include "common/ScreenExporter.hpp"
@@ -46,7 +45,7 @@
 #include <string>
 #include <memory>
 
-static const std::string Version = "0.5.0";
+static const std::string Version = "0.5.1";
 
 /**
    This class interfaces ALE with external code for controlling agents.
@@ -83,7 +82,7 @@ public:
   reward_t act(Action action);
 
   // Indicates if the game has ended.
-  bool game_over();
+  bool game_over() const;
 
   // Resets the game, but not the full system.
   void reset_game();
@@ -103,10 +102,19 @@ public:
   const int lives();
 
   // Returns the frame number since the start of the current episode
-  int getEpisodeFrameNumber();
+  int getEpisodeFrameNumber() const;
 
   // Returns the current game screen
   const ALEScreen &getScreen();
+
+  //This method should receive an empty vector to fill it with
+  //the grayscale colours
+  void getScreenGrayscale(std::vector<unsigned char>& grayscale_output_buffer);
+
+  //This method should receive a vector to fill it with
+  //the RGB colours. The first positions contain the red colours,
+  //followed by the green colours and then the blue colours
+  void getScreenRGB(std::vector<unsigned char>& output_rgb_buffer);
 
   // Returns the current RAM content
   const ALERAM &getRAM();
@@ -117,9 +125,21 @@ public:
   // Loads the state of the system
   void loadState();
 
+  // This makes a copy of the environment state. This copy does *not* include pseudorandomness,
+  // making it suitable for planning purposes. By contrast, see cloneSystemState.
   ALEState cloneState();
 
+  // Reverse operation of cloneState(). This does not restore pseudorandomness, so that repeated
+  // calls to restoreState() in the stochastic controls setting will not lead to the same outcomes.
+  // By contrast, see restoreSystemState.
   void restoreState(const ALEState& state);
+
+  // This makes a copy of the system & environment state, suitable for serialization. This includes
+  // pseudorandomness and so is *not* suitable for planning purposes.
+  ALEState cloneSystemState();
+
+  // Reverse operation of cloneSystemState.
+  void restoreSystemState(const ALEState& state);
 
   // Save the current screen as a png file
   void saveScreenPNG(const std::string& filename);

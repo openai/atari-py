@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace ale;
 
-Logger::mode Logger::current_mode = Warning;
+Logger::mode Logger::current_mode = Info;
 
 void Logger::setMode(Logger::mode m){
     current_mode = m;

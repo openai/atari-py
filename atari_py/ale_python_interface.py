@@ -2,6 +2,7 @@
 # Author: Ben Goodrich
 # This directly implements a python version of the arcade learning
 # environment interface.
+__all__ = ['ALEInterface']
 
 from ctypes import *
 import numpy as np
@@ -24,7 +25,7 @@ ale_lib.getBool.argtypes = [c_void_p, c_char_p]
 ale_lib.getBool.restype = c_bool
 ale_lib.getFloat.argtypes = [c_void_p, c_char_p]
 ale_lib.getFloat.restype = c_float
-ale_lib.setString.argtypes = [c_void_p, c_char_p, c_int]
+ale_lib.setString.argtypes = [c_void_p, c_char_p, c_char_p]
 ale_lib.setString.restype = None
 ale_lib.setInt.argtypes = [c_void_p, c_char_p, c_int]
 ale_lib.setInt.restype = None
@@ -66,76 +67,70 @@ ale_lib.getScreenHeight.argtypes = [c_void_p]
 ale_lib.getScreenHeight.restype = c_int
 ale_lib.getScreenRGB.argtypes = [c_void_p, c_void_p]
 ale_lib.getScreenRGB.restype = None
+ale_lib.getScreenRGB2.argtypes = [c_void_p, c_void_p]
+ale_lib.getScreenRGB2.restype = None
 ale_lib.getScreenGrayscale.argtypes = [c_void_p, c_void_p]
 ale_lib.getScreenGrayscale.restype = None
 ale_lib.saveState.argtypes = [c_void_p]
 ale_lib.saveState.restype = None
 ale_lib.loadState.argtypes = [c_void_p]
 ale_lib.loadState.restype = None
-ale_lib.saveScreenPNG.argtypes = [c_void_p, c_char_p]
-ale_lib.saveScreenPNG.restype = None
 ale_lib.cloneState.argtypes = [c_void_p]
 ale_lib.cloneState.restype = c_void_p
 ale_lib.restoreState.argtypes = [c_void_p, c_void_p]
 ale_lib.restoreState.restype = None
+ale_lib.cloneSystemState.argtypes = [c_void_p]
+ale_lib.cloneSystemState.restype = c_void_p
+ale_lib.restoreSystemState.argtypes = [c_void_p, c_void_p]
+ale_lib.restoreSystemState.restype = None
+ale_lib.deleteState.argtypes = [c_void_p]
+ale_lib.deleteState.restype = None
+ale_lib.saveScreenPNG.argtypes = [c_void_p, c_char_p]
+ale_lib.saveScreenPNG.restype = None
+ale_lib.encodeState.argtypes = [c_void_p, c_void_p, c_int]
+ale_lib.encodeState.restype = None
+ale_lib.encodeStateLen.argtypes = [c_void_p]
+ale_lib.encodeStateLen.restype = c_int
+ale_lib.decodeState.argtypes = [c_void_p, c_int]
+ale_lib.decodeState.restype = c_void_p
+ale_lib.setLoggerMode.argtypes = [c_int]
+ale_lib.setLoggerMode.restype = None
 
-ale_lib.ALEState_del.argtypes = [c_void_p]
-ale_lib.ALEState_del.restype = None
-ale_lib.ALEState_getFrameNumber.argtypes = [c_void_p]
-ale_lib.ALEState_getFrameNumber.restype = c_int
-ale_lib.ALEState_getEpisodeFrameNumber.argtypes = [c_void_p]
-ale_lib.ALEState_getEpisodeFrameNumber.restype = c_int
-ale_lib.ALEState_equals.argtypes = [c_void_p, c_void_p]
-ale_lib.ALEState_equals.restype = c_bool
-
-
-class ALEState(object):
-    def __init__(self, obj, ale):
-        self.obj = obj
-        self.ale = ale
-
-    def __del__(self):
-        ale_lib.ALEState_del(self.obj)
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) \
-                and ale_lib.ALEState_equals(self.obj, other.obj)
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    @property
-    def frame_number(self):
-        return ale_lib.ALEState_getFrameNumber(self.obj)
-
-    @property
-    def episode_frame_number(self):
-        return ale_lib.ALEState_getEpisodeFrameNumber(self.obj)
+def _as_bytes(s):
+    if hasattr(s, 'encode'):
+        return s.encode('utf8')
+    return s
 
 class ALEInterface(object):
+    # Logger enum
+    class Logger:
+        Info = 0
+        Warning = 1
+        Error = 2
+
     def __init__(self):
         self.obj = ale_lib.ALE_new()
 
     def getString(self, key):
-        return ale_lib.getString(self.obj, key)
+        return ale_lib.getString(self.obj, _as_bytes(key))
     def getInt(self, key):
-        return ale_lib.getInt(self.obj, key)
+        return ale_lib.getInt(self.obj, _as_bytes(key))
     def getBool(self, key):
-        return ale_lib.getBool(self.obj, key)
+        return ale_lib.getBool(self.obj, _as_bytes(key))
     def getFloat(self, key):
-        return ale_lib.getFloat(self.obj, key)
+        return ale_lib.getFloat(self.obj, _as_bytes(key))
 
     def setString(self, key, value):
-      ale_lib.setString(self.obj, key, value)
+      ale_lib.setString(self.obj, _as_bytes(key), _as_bytes(value))
     def setInt(self, key, value):
-      ale_lib.setInt(self.obj, key, value)
+      ale_lib.setInt(self.obj, _as_bytes(key), int(value))
     def setBool(self, key, value):
-      ale_lib.setBool(self.obj, key, value)
+      ale_lib.setBool(self.obj, _as_bytes(key), bool(value))
     def setFloat(self, key, value):
-      ale_lib.setFloat(self.obj, key, value)
+      ale_lib.setFloat(self.obj, _as_bytes(key), float(value))
 
     def loadROM(self, rom_file):
-        ale_lib.loadROM(self.obj, six.b(rom_file))
+        ale_lib.loadROM(self.obj, _as_bytes(rom_file))
 
     def act(self, action):
         return ale_lib.act(self.obj, int(action))
@@ -174,7 +169,6 @@ class ALEInterface(object):
         height = ale_lib.getScreenHeight(self.obj)
         return (width, height)
 
-
     def getScreen(self, screen_data=None):
         """This function fills screen_data with the RAW Pixel data
         screen_data MUST be a numpy array of uint8/int8. This could be initialized like so:
@@ -195,12 +189,36 @@ class ALEInterface(object):
         screen_data MUST be a numpy array of uint8. This can be initialized like so:
         screen_data = np.empty((height,width,3), dtype=np.uint8)
         If it is None,  then this function will initialize it.
+        On little-endian machines like x86, the channels are BGR order:
+            screen_data[x, y, 0:3] is [blue, green, red]
+        On big-endian machines (rare in 2017) the channels would be the opposite order.
+        There's not much error checking here: if you supply an array that's too small
+        this function will produce undefined behavior.
         """
         if(screen_data is None):
             width = ale_lib.getScreenWidth(self.obj)
             height = ale_lib.getScreenHeight(self.obj)
             screen_data = np.empty((height, width,3), dtype=np.uint8)
         ale_lib.getScreenRGB(self.obj, as_ctypes(screen_data[:]))
+        return screen_data
+
+
+    def getScreenRGB2(self, screen_data=None):
+        """This function fills screen_data with the data in RGB format.
+        screen_data MUST be a numpy array of uint8. This can be initialized like so:
+          screen_data = np.empty((height,width,3), dtype=np.uint8)
+        If it is None,  then this function will initialize it.
+        On all architectures, the channels are RGB order:
+            screen_data[x, y, :] is [red, green, blue]
+        There's not much error checking here: if you supply an array that's too small
+        this function will produce undefined behavior.
+        """
+        if(screen_data is None):
+            width = ale_lib.getScreenWidth(self.obj)
+            height = ale_lib.getScreenHeight(self.obj)
+            screen_data = np.empty((height, width, 3), dtype=np.uint8)
+        assert screen_data.strides == (480, 3, 1)
+        ale_lib.getScreenRGB2(self.obj, as_ctypes(screen_data[:]))
         return screen_data
 
     def getScreenGrayscale(self, screen_data=None):
@@ -233,21 +251,66 @@ class ALEInterface(object):
         return ram
 
     def saveScreenPNG(self, filename):
-        return ale_lib.saveScreenPNG(self.obj, filename)
+        """Save the current screen as a png file"""
+        return ale_lib.saveScreenPNG(self.obj, _as_bytes(filename))
 
     def saveState(self):
+        """Saves the state of the system"""
         return ale_lib.saveState(self.obj)
 
     def loadState(self):
+        """Loads the state of the system"""
         return ale_lib.loadState(self.obj)
 
     def cloneState(self):
-        return ALEState(ale_lib.cloneState(self.obj), self)
+        """This makes a copy of the environment state. This copy does *not*
+        include pseudorandomness, making it suitable for planning
+        purposes. By contrast, see cloneSystemState.
+        """
+        return ale_lib.cloneState(self.obj)
 
     def restoreState(self, state):
-        if state.ale is not self:
-            raise ValueError('Can only restore state on the ale instance it yielded from')
-        return ale_lib.restoreState(self.obj, state.obj)
+        """Reverse operation of cloneState(). This does not restore
+        pseudorandomness, so that repeated calls to restoreState() in
+        the stochastic controls setting will not lead to the same
+        outcomes.  By contrast, see restoreSystemState.
+        """
+        ale_lib.restoreState(self.obj, state)
+
+    def cloneSystemState(self):
+        """This makes a copy of the system & environment state, suitable for
+        serialization. This includes pseudorandomness and so is *not*
+        suitable for planning purposes.
+        """
+        return ale_lib.cloneSystemState(self.obj)
+
+    def restoreSystemState(self, state):
+        """Reverse operation of cloneSystemState."""
+        ale_lib.restoreSystemState(self.obj, state)
+
+    def deleteState(self, state):
+        """ Deallocates the ALEState """
+        ale_lib.deleteState(state)
+
+    def encodeStateLen(self, state):
+        return ale_lib.encodeStateLen(state)
+
+    def encodeState(self, state, buf=None):
+        if buf == None:
+            length = ale_lib.encodeStateLen(state)
+            buf = np.zeros(length, dtype=np.uint8)
+        ale_lib.encodeState(state, as_ctypes(buf), c_int(len(buf)))
+        return buf
+
+    def decodeState(self, serialized):
+        return ale_lib.decodeState(as_ctypes(serialized), len(serialized))
 
     def __del__(self):
         ale_lib.ALE_del(self.obj)
+
+    @staticmethod
+    def setLoggerMode(mode):
+        dic = {'info': 0, 'warning': 1, 'error': 2}
+        mode = dic.get(mode, mode)
+        assert mode in [0, 1, 2], "Invalid Mode! Mode must be one of 0: info, 1: warning, 2: error"
+        ale_lib.setLoggerMode(mode)
