@@ -28,7 +28,7 @@ Or just remember to set it in your cmd.exe environment before running python:
 
 5) Install atari-py and OpenAI Gym
 
-```git clone https://github.com/rybskej/atari-py```
+```git clone https://github.com/j8lp/atari-py```
 
 ```cd atari-py && make && python setup.py install && pip install "gym[atari]"```
 
