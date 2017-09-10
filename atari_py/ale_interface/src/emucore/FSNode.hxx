@@ -120,8 +120,10 @@ class AbstractFilesystemNode
     {
       std::string first = displayName();
       std::string second = node.displayName();
-      transform(first.begin(), first.end(), first.begin(), (int(*)(int)) tolower);
-      transform(second.begin(), second.end(), second.begin(), (int(*)(int)) tolower);
+      std::transform(
+          first.begin(), first.end(), first.begin(), (int(*)(int)) tolower);
+      std::transform(
+          second.begin(), second.end(), second.begin(), (int(*)(int)) tolower);
       return first < second;
     }
 
