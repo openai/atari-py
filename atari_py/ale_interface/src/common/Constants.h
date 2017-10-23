@@ -68,7 +68,8 @@ enum Action {
     SAVE_STATE              = 43,
     LOAD_STATE              = 44,
     SYSTEM_RESET            = 45,
-    LAST_ACTION_INDEX       = 50
+    LAST_ACTION_INDEX       = 50,
+    SELECT                  = 51
 };
 
 #define PLAYER_A_MAX (18)

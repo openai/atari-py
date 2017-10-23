@@ -222,6 +222,8 @@ void ALEState::applyActionPaddles(Event* event, int player_a_action, int player_
   // Handle reset
   if (player_a_action == RESET || player_b_action == RESET) 
     event->set(Event::ConsoleReset, 1);
+  if (player_a_action == SELECT || player_b_action == SELECT)
+    event->set(Event::ConsoleSelect, 1);
 
   // Now add the fire event 
   switch (player_a_action) {
@@ -353,6 +355,9 @@ void ALEState::setActionJoysticks(Event* event, int player_a_action, int player_
       case RESET:
           event->set(Event::ConsoleReset, 1);
           break;
+      case SELECT:
+          event->set(Event::ConsoleSelect, 1);
+          break;
       default: 
           ale::Logger::Error << "Invalid Player A Action: " << player_a_action;
           exit(-1); 
@@ -450,6 +455,9 @@ void ALEState::setActionJoysticks(Event* event, int player_a_action, int player_
           event->set(Event::ConsoleReset, 1);
           ale::Logger::Info << "Sending Reset..." << endl;
           break;
+      case SELECT:
+          event->set(Event::ConsoleSelect, 1);
+          break;
       default: 
           ale::Logger::Error << "Invalid Player B Action: " << player_b_action << endl;
           exit(-1); 
@@ -462,6 +470,7 @@ void ALEState::setActionJoysticks(Event* event, int player_a_action, int player_
  * ***************************************************************************/
 void ALEState::resetKeys(Event* event) {
     event->set(Event::ConsoleReset, 0);
+    event->set(Event::ConsoleSelect, 0);
     event->set(Event::JoystickZeroFire, 0);
     event->set(Event::JoystickZeroUp, 0);
     event->set(Event::JoystickZeroDown, 0);

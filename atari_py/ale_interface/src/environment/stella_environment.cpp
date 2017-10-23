@@ -75,6 +75,10 @@ void StellaEnvironment::reset() {
 
   emulate(PLAYER_A_NOOP, PLAYER_B_NOOP, noopSteps);
   // reset for n steps
+  int game_mode = m_osystem->settings().getInt("game_mode");
+  for (int i = 0; i < game_mode; i++) {
+    emulate(SELECT, PLAYER_B_NOOP, 1);
+  }
   emulate(RESET, PLAYER_B_NOOP, m_num_reset_steps);
 
   // reset the rom (after emulating, in case the NOOPs led to reward)
