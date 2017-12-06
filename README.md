@@ -59,5 +59,6 @@ this repo to your `PYTHONPATH` before running python:
 If you get a crypto error in step 2, try running the following commands in the msys2 terminal:
 
 ``` pacman-key --init ```
+
 ``` pacman-key --populate ```
 
