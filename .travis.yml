@@ -1,18 +1,9 @@
 language: python
 
-python:
-    - 3.5
-    - 3.6
-    - 3.7
-
 os:
-    - dist: xenial
-      sudo: requires
-      services: docker
-
     - osx
 
 script:
-    - python -c "print('Hello World')"
+    - python -V
          
         
