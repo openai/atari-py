@@ -5,7 +5,7 @@ matrix:
 
     - os: linux
       env: 
-        - PYTHONVER=3.6
+        - PYTHON_VER=3.6
       serivces: docker
       install: 
         - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
