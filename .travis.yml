@@ -8,8 +8,8 @@ env:
 install: 
     - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
 script: 
-    - docker run pytest .
-    - docker run pip wheel --wheel-dir=/tmp/wheeldir .
+    - docker run atari-py-test pytest .
+    - docker run atari-py-test pip wheel --wheel-dir=/tmp/wheeldir .
 
 # upload the wheels on success / tag / etc
 
