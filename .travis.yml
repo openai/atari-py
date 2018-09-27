@@ -1,5 +1,9 @@
 os:
     - osx
+    - os: linux
+      serivces: docker
+        
+      
 
 script:
     - python3 -V
