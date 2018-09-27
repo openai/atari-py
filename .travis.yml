@@ -2,6 +2,6 @@ os:
     - osx
 
 script:
-    - python -V
+    - python3 -V
          
         
