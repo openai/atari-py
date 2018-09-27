@@ -5,12 +5,12 @@ python:
     - 3.6
     - 3.7
 
-matrix:
-    include:
-        - os: linux
-          dist: xenial
-        
-        - os: osx
+os:
+    - dist: xenial
+      sudo: requires
+      services: docker
+
+    - osx
 
 script:
     - python -c "print('Hello World')"
