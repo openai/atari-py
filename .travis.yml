@@ -1,13 +1,16 @@
 language: python
 
-os:
-    - linux
-    - osx
-
 python:
     - 3.5
     - 3.6
     - 3.7
+
+matrix:
+    include:
+        - os: linux
+          dist: xenial
+        
+        - os: osx
 
 script:
     - python -c "print('Hello World')"
