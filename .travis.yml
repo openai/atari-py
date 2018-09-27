@@ -1,15 +1,15 @@
-sudo: required
 language: python
-services:
-  - docker
-env:
-  - PYTHON_VER=3.6
 
-install: 
-    - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
-script: 
-    - docker run atari-py-test pytest .
-    - docker run atari-py-test pip wheel --wheel-dir=/tmp/wheeldir .
+os:
+    - linux
+    - osx
 
-# upload the wheels on success / tag / etc
+python:
+    - 3.5
+    - 3.6
+    - 3.7
 
+script:
+    - python -c "print('Hello World')"
+         
+        
