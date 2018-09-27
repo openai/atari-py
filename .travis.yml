@@ -4,8 +4,14 @@ matrix:
       script: ./osx_install.sh
 
     - os: linux
+      env: 
+        - PYTHONVER=3.6
       serivces: docker
-      script: python3 -V
+      install: 
+        - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
+      script: 
+        - docker run atari-py-test pytest . 
+        - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test pip wheel --wheel-dir=/tmp/wheelhouse
         
       
 
