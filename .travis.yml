@@ -1,11 +1,12 @@
-os:
-    - osx
+matrix:
+    include:
+    - os: osx:
+      script: ./os_install.sh
+
     - os: linux
       serivces: docker
+      script: python3 -V
         
       
 
-script:
-    - python3 -V
-         
         
