@@ -8,7 +8,7 @@ matrix:
       python: 3.6
       sudo: reqiured
       install:
-        - apt-get install -y cmake
+        - sudo apt-get install -y cmake
       
 script:
     - ./osx_build.sh
