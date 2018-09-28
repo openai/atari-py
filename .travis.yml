@@ -12,6 +12,7 @@ matrix:
       script: 
         - docker run atari-py-test pytest . 
         - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test ./linux_build.sh
+        - ls -lht /tmp/wheelhouse
         
       
 
