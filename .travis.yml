@@ -11,7 +11,7 @@ matrix:
         - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
       script: 
         - docker run atari-py-test pytest . 
-        - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test ./linux_build.sh
+        - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test bash ./linux_build.sh
         - ls -lht /tmp/wheelhouse
         
       
