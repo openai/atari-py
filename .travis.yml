@@ -1,7 +1,7 @@
 matrix:
     include:
     - os: osx
-      script: ./osx_install.sh
+      script: ./osx_build.sh
 
     - os: linux
       env: 
@@ -11,7 +11,7 @@ matrix:
         - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
       script: 
         - docker run atari-py-test pytest . 
-        - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test pip wheel --wheel-dir=/tmp/wheelhouse
+        - PLATNAME=$(docker run atari-py-test python -c "import distutils.util; print(distutils.util.platorm_name)") docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test pip wheel --wheel-dir=/tmp/wheelhouse . 
         
       
 
