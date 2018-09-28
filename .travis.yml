@@ -3,17 +3,28 @@ matrix:
     - os: osx
       script: ./osx_build.sh
 
+
     - os: linux
-      env: 
-        - PYTHON_VER=3.6
-      serivces: docker
-      install: 
-        - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
-      script: 
-        - docker run atari-py-test pytest . 
-        - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test bash ./linux_build.sh
-        - ls -lht /tmp/wheelhouse
-        
+      python: 3.6
+      sudo: reqiured
+      install:
+        - apt-get install -y cmake
+      
+script:
+    - ./osx_build.sh
+
+
+#     - os: linux
+#       env: 
+#         - PYTHON_VER=3.6
+#       serivces: docker
+#       install: 
+#         - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
+#       script: 
+#         - docker run atari-py-test pytest . 
+#         - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test bash ./linux_build.sh
+#         - ls -lht /tmp/wheelhouse
+#         
       
 
         
