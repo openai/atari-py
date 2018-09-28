@@ -1,30 +1,25 @@
 matrix:
     include:
     - os: osx
-      script: ./osx_build.sh
-
+      script: ./build.sh
 
     - os: linux
-      python: 3.6
-      sudo: reqiured
-      install:
-        - sudo apt-get install -y cmake
-      
-script:
-    - ./osx_build.sh
+      env: 
+        - PYTHON_VER=3.6
+      serivces: docker
+      install: 
+        - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
+      script: 
+        - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test bash ./build.sh
+        - ls -lht /tmp/wheelhouse
 
 
-#     - os: linux
-#       env: 
-#         - PYTHON_VER=3.6
-#       serivces: docker
-#       install: 
-#         - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
-#       script: 
-#         - docker run atari-py-test pytest . 
-#         - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test bash ./linux_build.sh
-#         - ls -lht /tmp/wheelhouse
-#         
-      
+deploy:
+    provider: script
+    script: ./deploy.sh test
+    on: 
+        all_branches: true
+        
+    
 
         
