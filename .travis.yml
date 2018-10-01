@@ -8,11 +8,10 @@ matrix:
     - os: linux
       env: 
         - PYTHON_VER=3.6
-      serivces: docker
       install: 
-        - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
+        - docker build -t atari-py-img -f dockerfile.${PYTHON_VER} . 
       script: 
-        - docker run -e TRAVIS_TAG=$TRAVIS_TAG -e TWINE_USERNAME=$TWINE_USERNAME -e TWINE_PASSWORD=$TWINE_PASSWORD atari-py-test bash ./build_and_deploy.sh
+        - docker run -e TRAVIS_TAG=$TRAVIS_TAG -e TWINE_USERNAME=$TWINE_USERNAME -e TWINE_PASSWORD=$TWINE_PASSWORD atari-py-img bash ./build_and_deploy.sh
     
 
         
