@@ -10,7 +10,7 @@ matrix:
       install: 
         - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
       script: 
-        - docker run -e TWINE_USERNAME=$TWINE_USERNAME -e TWINE_PASSWORD=$TWINE_PASSWORD atari-py-test bash ./build_and_deploy.sh
+        - docker run -e TRAVIS_TAG=$TRAVIS_TAG -e TWINE_USERNAME=$TWINE_USERNAME -e TWINE_PASSWORD=$TWINE_PASSWORD atari-py-test bash ./build_and_deploy.sh
     
 
         
