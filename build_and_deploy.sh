@@ -9,8 +9,8 @@ pip3 wheel . --wheel-dir=/tmp/wheelhouse --build-option --plat-name=$PYPLATFORM
 ls -lht /tmp/wheelhouse
 
 export TRAVIS_TAG="0.1.2"
-if [[ ! -z "$TRAVIS_TAG" ]]; do
+if [[ ! -z "$TRAVIS_TAG" ]]; then
     pip3 install twine
     twine upload /tmp/wheelhouse/atari_py-*
-done
+fi
 
