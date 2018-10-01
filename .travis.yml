@@ -2,6 +2,8 @@ matrix:
     include:
     - os: osx
       script: ./build_and_deploy.sh
+      env:
+        - DEPLOY_SDIST=true
 
     - os: linux
       env: 
