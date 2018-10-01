@@ -10,7 +10,7 @@ ls -lht /tmp/wheelhouse
 
 export TRAVIS_TAG="0.1.2"
 if [[ ! -z "$TRAVIS_TAG" ]]; then
-    pip3 install twine
-    twine upload /tmp/wheelhouse/atari_py-*
+    pip3 install --user twine
+    python3 -m twine upload /tmp/wheelhouse/atari_py-*
 fi
 
