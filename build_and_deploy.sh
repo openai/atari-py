@@ -4,12 +4,18 @@ pip3 install pytest
 pip3 install .
 pytest .
 
-PYPLATFORM=`python3 -c "import distutils.util; print(distutils.util.get_platform())"`
-pip3 wheel . --wheel-dir=/tmp/wheelhouse --build-option --plat-name=$PYPLATFORM
-ls -lht /tmp/wheelhouse
-
 if [[ ! -z "$TRAVIS_TAG" ]]; then
+    
+    PYPLATFORM=`python3 -c "import distutils.util; print(distutils.util.get_platform())"`
+    pip3 wheel . --wheel-dir=/tmp/wheelhouse --build-option --plat-name=$PYPLATFORM
+    ls -lht /tmp/wheelhouse
+
     pip3 install --user twine
     python3 -m twine upload /tmp/wheelhouse/atari_py-*
+
+    if [[ ! -z "$DEPLOY_SDIST" ]]; then
+        python3 setup.py sdist       
+        python3 -m twine upload dist/*
+    fi
 fi
 
