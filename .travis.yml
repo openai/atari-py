@@ -16,7 +16,7 @@ matrix:
 
 deploy:
     provider: script
-    script: ./deploy.sh test
+    script: ./deploy.sh
     on: 
         all_branches: true
         
