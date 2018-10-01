@@ -1,7 +1,7 @@
 matrix:
     include:
     - os: osx
-      script: ./build.sh
+      script: ./build_and_deploy.sh
 
     - os: linux
       env: 
@@ -10,16 +10,7 @@ matrix:
       install: 
         - docker build -t atari-py-test -f dockerfile.${PYTHON_VER} . 
       script: 
-        - docker run -v /tmp/wheelhouse:/tmp/wheelhouse atari-py-test bash ./build.sh
-        - ls -lht /tmp/wheelhouse
-
-
-deploy:
-    provider: script
-    script: ./deploy.sh
-    on: 
-        all_branches: true
-        
+        - docker run -e TWINE_USERNAME=$TWINE_USERNAME -e TWINE_PASSWORD=$TWINE_PASSWORD atari-py-test bash ./build_and_deploy.sh
     
 
         
