@@ -1,4 +1,4 @@
 set -ex
-pip install twine
+pip install --user twine
 twine upload /tmp/wheelhouse/atari_py-*
 
