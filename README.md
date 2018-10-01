@@ -9,17 +9,12 @@ A packaged and slightly-modified version of [https://github.com/bbitmaster/ale_p
 To install via pip, run:
 
 ```pip install atari-py```
+That *should* install a correct binary verison for your OS. If that does not work (or if you would like get the latest-latest
+version, or you just want to tinker with the code yourself) see install from source. 
 
-Alternatively, you can install using setuptools using:
+## Installation from source
 
-```python setup.py install```
+  -  make sure you have git, cmake and zlib1g system packages installed 
+  -  clone the repo
+  -  run `pip install -e .`
 
-You can also trigger a build of the C++ code via `make`, and then add
-this repo to your `PYTHONPATH`:
-
-```export PYTHONPATH=/path/to/atari-py:$PYTHONPATH```
-
-### Common issues
-
-- Make sure you have `cmake` installed. On OSX, you probably want
-  `brew install cmake`.
