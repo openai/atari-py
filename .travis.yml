@@ -3,7 +3,7 @@ matrix:
     - os: osx
       osx_image: xcode8
       install:
-        - ./install_osx.sh
+        - . install_osx.sh
       script: ./build_and_deploy.sh
       env:
         - DEPLOY_SDIST=true
