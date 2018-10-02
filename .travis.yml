@@ -2,6 +2,8 @@ matrix:
     include:
     - os: osx
       osx_image: xcode8
+      install:
+        - brew install python3
       script: ./build_and_deploy.sh
       env:
         - DEPLOY_SDIST=true
