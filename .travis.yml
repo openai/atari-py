@@ -2,12 +2,14 @@ matrix:
     include:
     - os: osx
       osx_image: xcode8
-      install:
-        - . install_osx.sh
-      script: ./build_and_deploy.sh
       env:
         - DEPLOY_SDIST=true
-
+        - PATH=$HOME/miniconda/bin:$PATH
+      install:
+        - . install_osx.sh
+      script: 
+        - ./build_and_deploy.sh
+        
     - os: linux
       env: 
         - PYTHON_VER=3.6

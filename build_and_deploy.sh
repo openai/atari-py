@@ -1,5 +1,6 @@
 set -ex
 
+python --version
 pip install pytest
 pip install .
 pytest .
