@@ -5,6 +5,10 @@ import subprocess
 import sys
 from distutils.command.build import build as DistutilsBuild
 
+# validate the cmake installation and dump shell output to /tmp/nul
+if os.system('cmake --version >/tmp/nul 2>&1') != 0:
+    raise EnvironmentError('`cmake` must be installed')
+
 with open(os.path.join(os.path.dirname(__file__), 'atari_py/package_data.txt')) as f:
     package_data = [line.rstrip() for line in f.readlines()]
 
