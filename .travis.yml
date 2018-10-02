@@ -1,6 +1,7 @@
 matrix:
     include:
     - os: osx
+      osx_image: xcode8
       script: ./build_and_deploy.sh
       env:
         - DEPLOY_SDIST=true
