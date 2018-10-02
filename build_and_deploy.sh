@@ -1,7 +1,7 @@
 set -ex
 
-pip install pytest
-pip install .
+pip3 install pytest
+pip3 install .
 pytest .
 
 if [[ ! -z "$TRAVIS_TAG" ]]; then
