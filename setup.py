@@ -32,6 +32,6 @@ setup(name='atari-py',
       packages=['atari_py'],
       package_data={'atari_py': package_data},
       cmdclass={'build': Build},
-      install_requires=['numpy', 'six', 'cmake'],
+      install_requires=['numpy', 'six'],
       tests_require=['nose2']
 )
