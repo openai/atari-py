@@ -1,7 +1,7 @@
 #!/bin/bash
 function pre_build {
     set -ex
-    build_cmake
+    build_zlib
     pip install .
     pip install pytest
     pytest .
