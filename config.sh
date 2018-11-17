@@ -9,6 +9,7 @@ function pre_build {
 }
 
 function run_tests {
+    pip install gym[atari]
     python -c "import gym; gym.make('Pong-v4')"
 }
 
