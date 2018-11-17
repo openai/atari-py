@@ -1,6 +1,6 @@
 import multiprocessing
 import os
-from setuptools import setup
+from setuptools import setup, dist
 import subprocess
 import sys
 from distutils.command.build import build as DistutilsBuild
