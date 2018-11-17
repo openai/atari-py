@@ -9,6 +9,6 @@ function pre_build {
 }
 
 function run_tests {
-    echo "Hello world with box2d-py"
+    python -c "import gym; gym.make('Pong-v4')"
 }
 
