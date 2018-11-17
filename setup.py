@@ -22,15 +22,12 @@ class Build(DistutilsBuild):
             raise
         DistutilsBuild.run(self)
 
-try:
-    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
-    class bdist_wheel(_bdist_wheel):
-        def finalize_options(self):
-            _bdist_wheel.finalize_options(self)
-            self.root_is_pure = False
-except ImportError:
-    bdist_wheel = None
 
+class BinaryDistribution(dist.Distribution):
+  def is_pure(self):
+    return False
+  def has_ext_modules(self):
+    return True
 
 setup(name='atari-py',
       version='0.1.6',
@@ -41,7 +38,8 @@ setup(name='atari-py',
       license='',
       packages=['atari_py'],
       package_data={'atari_py': package_data},
-      cmdclass={'build': Build, 'bdist_wheel': bdist_wheel},
+      distclass=BinaryDistribution,
+      cmdclass={'build': Build},
       install_requires=['numpy', 'six'],
       tests_require=['nose2']
 )
