@@ -1,6 +1,6 @@
 import multiprocessing
 import os
-from setuptools import setup, Extension
+from setuptools import setup, dist, Extension
 import subprocess
 import sys
 from distutils.command.build import build as DistutilsBuild
@@ -21,7 +21,13 @@ class Build(DistutilsBuild):
             sys.stderr.write("Unable to execute '{}'. HINT: are you sure `make` is installed?\n".format(' '.join(cmd)))
             raise
         DistutilsBuild.run(self)
-    
+ 
+class BinaryDistribution(dist.Distribution):
+  def is_pure(self):
+    return False
+  def has_ext_modules(self):
+    return True
+   
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         Extension.__init__(self, name, sources=[])
@@ -38,6 +44,7 @@ setup(name='atari-py',
       package_data={'atari_py': package_data},
       ext_modules=[CMakeExtension('atari_py')],
       cmdclass={'build': Build},
+      distclass=BinaryDistribution,
       install_requires=['numpy', 'six'],
       tests_require=['nose2']
 )
