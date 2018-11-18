@@ -1,6 +1,7 @@
 import multiprocessing
 import os
 from setuptools import setup, dist, Extension
+from setuptools.command.build_ext import build_ext
 import subprocess
 import sys
 from distutils.command.build import build as DistutilsBuild
@@ -8,7 +9,7 @@ from distutils.command.build import build as DistutilsBuild
 with open(os.path.join(os.path.dirname(__file__), 'atari_py/package_data.txt')) as f:
     package_data = [line.rstrip() for line in f.readlines()]
 
-class Build(DistutilsBuild):
+class Build(build_ext):
     def run(self):
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         cmd = ['make', 'build', '-C', 'atari_py/ale_interface', '-j', str(cores_to_use)]
@@ -20,7 +21,7 @@ class Build(DistutilsBuild):
         except OSError as e:
             sys.stderr.write("Unable to execute '{}'. HINT: are you sure `make` is installed?\n".format(' '.join(cmd)))
             raise
-        DistutilsBuild.run(self)
+        # build_ext.run(self)
  
 class BinaryDistribution(dist.Distribution):
   def is_pure(self):
@@ -43,8 +44,8 @@ setup(name='atari-py',
       packages=['atari_py'],
       package_data={'atari_py': package_data},
       ext_modules=[CMakeExtension('atari_py')],
-      cmdclass={'build': Build},
-      distclass=BinaryDistribution,
+      cmdclass={'build_ext': Build},
+      # distclass=BinaryDistribution,
       install_requires=['numpy', 'six'],
       tests_require=['nose2']
 )
