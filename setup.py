@@ -4,7 +4,6 @@ from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 import subprocess
 import sys
-from distutils.command.build import build as DistutilsBuild
 
 with open(os.path.join(os.path.dirname(__file__), 'atari_py/package_data.txt')) as f:
     package_data = [line.rstrip() for line in f.readlines()]
