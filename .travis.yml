@@ -1,22 +1,52 @@
-matrix:
-    include:
-    - os: osx
-      osx_image: xcode8
-      env:
-        - DEPLOY_SDIST=true
-        - PATH=$HOME/miniconda/bin:$PATH
-      install:
-        - . install_osx.sh
-      script: 
-        - ./build_and_deploy.sh
-        
-    - os: linux
-      env: 
-        - PYTHON_VER=3.6
-      install: 
-        - docker build -t atari-py-img -f dockerfile.${PYTHON_VER} . 
-      script: 
-        - docker run -e TRAVIS_TAG=$TRAVIS_TAG -e TWINE_USERNAME=$TWINE_USERNAME -e TWINE_PASSWORD=$TWINE_PASSWORD atari-py-img bash ./build_and_deploy.sh
-    
+env:
+  global:
+    - REPO_DIR=.
+    - BUILD_COMMIT=$TRAVIS_COMMIT
+    - PLAT=x86_64
 
-        
+install: 
+  - git clone https://github.com/matthew-brett/multibuild && cd multibuild && git checkout 254ad28 && cd ..
+  - . multibuild/common_utils.sh
+  - . multibuild/travis_steps.sh
+  - before_install 
+  - build_wheel $REPO_DIR $PLAT
+script: 
+  - install_run $PLAT
+
+after_success:
+  - ./deploy.sh
+
+    
+matrix:
+  include:
+
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.5
+    
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.6
+ 
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.7
+
+
+    - os: osx
+      osx_image: xcode8.3
+      env:
+        - MB_PYTHON_VERSION=3.5
+        - DEPLOY_SDIST=true
+ 
+    - os: osx
+      osx_image: xcode8.3
+      env:
+        - MB_PYTHON_VERSION=3.6
+ 
+    - os: osx
+      osx_image: xcode8.3
+      env:
+        - MB_PYTHON_VERSION=3.7
+ 
+ 
