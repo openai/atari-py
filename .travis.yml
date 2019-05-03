@@ -1,3 +1,4 @@
+language: sh
 env:
   global:
     - REPO_DIR=.
