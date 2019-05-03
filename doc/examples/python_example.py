@@ -4,12 +4,14 @@
 #
 # This is a direct port to python of the shared library example from
 # ALE provided in doc/examples/sharedLibraryInterfaceExample.cpp
+from __future__ import print_function
+
 import sys
 from random import randrange
-from ale_python_interface import ALEInterface
+from atari_py import ALEInterface
 
 if len(sys.argv) < 2:
-  print 'Usage:', sys.argv[0], 'rom_file'
+  print('Usage:', sys.argv[0], 'rom_file')
   sys.exit()
 
 ale = ALEInterface()
@@ -37,12 +39,12 @@ ale.loadROM(sys.argv[1])
 legal_actions = ale.getLegalActionSet()
 
 # Play 10 episodes
-for episode in xrange(10):
+for episode in range(10):
   total_reward = 0
   while not ale.game_over():
     a = legal_actions[randrange(len(legal_actions))]
     # Apply an action and get the resulting reward
     reward = ale.act(a);
     total_reward += reward
-  print 'Episode', episode, 'ended with score:', total_reward
+  print('Episode', episode, 'ended with score:', total_reward)
   ale.reset_game()
