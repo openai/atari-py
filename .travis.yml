@@ -55,5 +55,5 @@ matrix:
         - MB_PYTHON_VERSION=3.6
  
       install:
-        - choco install python --version 3.6.5
+        - choco install python --verbose
         - pip install virtualenv
