@@ -54,6 +54,6 @@ matrix:
       env:
         - MB_PYTHON_VERSION=3.6
  
-      install:
-        - choco install --yes python3 --force
+      before_install:
+        - choco install --yes python3
         - pip install virtualenv
