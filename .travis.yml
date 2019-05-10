@@ -56,4 +56,5 @@ matrix:
  
       before_install:
         - choco install --yes python3
+        - refreshenv
         - pip3 install virtualenv
