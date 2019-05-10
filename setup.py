@@ -8,12 +8,13 @@ import sys
 with open(os.path.join(os.path.dirname(__file__), 'atari_py/package_data.txt')) as f:
     package_data = [line.rstrip() for line in f.readlines()]
 
+
 class Build(build_ext):
     def run(self):
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         cmd = ['make', 'build', '-C', 'atari_py/ale_interface', '-j', str(cores_to_use)]
         try:
-            subprocess.check_call(cmd, cwd=self.build_lib)
+            subprocess.check_call(cmd, cwd=None if self.inplace else self.build_lib)
         except subprocess.CalledProcessError as e:
             sys.stderr.write("Could not build atari-py: %s. (HINT: are you sure cmake is installed? You might also be missing a library. Atari-py requires: zlib [installable as 'apt-get install zlib1g-dev' on Ubuntu].)\n" % e)
             raise
