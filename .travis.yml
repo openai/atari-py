@@ -56,5 +56,8 @@ matrix:
  
       before_install:
         - choco install --yes python3
-        - export PATH=$PATH:C:\Python37
+        - export PATH=$PATH:"C:\Python37"
+        - echo $PATH
+        - which python
+        - which pip3
         - pip3 install virtualenv
