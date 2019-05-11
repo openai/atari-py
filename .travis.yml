@@ -59,5 +59,4 @@ matrix:
         - export PATH=$PATH:/c/Python37
         - echo $PATH
         - which python
-        - which pip3
-        - pip3 install virtualenv
+        - python -m pip install virtualenv
