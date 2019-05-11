@@ -58,5 +58,5 @@ matrix:
         - choco install --yes python3
         - export PATH=$PATH:/c/Python37
         - echo $PATH
-        - which python
-        - python -m pip install virtualenv
+        - which python3
+        - python3 -m pip install virtualenv
