@@ -56,7 +56,7 @@ matrix:
  
       install:
         - choco install --yes python3
-        - choch install --yes make
+        - choco install --yes make
         - export PATH=/c/Python37:/c/Python37/Scripts:$PATH
         - echo $PATH
         - which python
@@ -68,5 +68,5 @@ matrix:
         - pip install .
         - pip install pytest
         - pytest .
-        - python setup.py bdist_wheel
+        - pip wheel .
 
