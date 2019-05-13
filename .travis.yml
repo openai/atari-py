@@ -54,10 +54,18 @@ matrix:
       env:
         - MB_PYTHON_VERSION=3.6
  
-      before_install:
+      install:
         - choco install --yes python3
         - export PATH=/c/Python37:/c/Python37/Scripts:$PATH
         - echo $PATH
         - which python
         - which pip
         - pip install virtualenv
+
+      script:
+        - pip install cmake
+        - pip install .
+        - pip install pytest
+        - pytest .
+        - python setup.py bdist_wheel
+
