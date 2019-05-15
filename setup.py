@@ -13,7 +13,8 @@ class Build(build_ext):
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         cmd = ['make', 'build', '-j', str(cores_to_use)]
         try:
-            cwd = os.path.join(self.build_lib, 'atari_py', 'ale_interface')
+            # cwd = os.path.join(self.build_lib, 'atari_py', 'ale_interface')
+            cwd = os.path.join('atari_py', 'ale_interface')
             print('Calling make in ', cwd)
             subprocess.check_call(cmd, cwd=cwd)
         except subprocess.CalledProcessError as e:
