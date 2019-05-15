@@ -5,13 +5,13 @@ from setuptools.command.build_ext import build_ext
 import subprocess
 import sys
 
-with open(os.path.join(os.path.dirname(__file__), 'atari_py/package_data.txt')) as f:
+with open(os.path.join(os.path.dirname(__file__), 'atari_py', 'package_data.txt')) as f:
     package_data = [line.rstrip() for line in f.readlines()]
 
 class Build(build_ext):
     def run(self):
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
-        cmd = ['make', 'build', '-C', os.path.join('atari_py','ale_interface', '-j', str(cores_to_use)]
+        cmd = ['make', 'build', '-C', os.path.join('atari_py','ale_interface'), '-j', str(cores_to_use)]
         try:
             subprocess.check_call(cmd, cwd=self.build_lib)
         except subprocess.CalledProcessError as e:
