@@ -65,7 +65,7 @@ matrix:
 
       script:
         - pip install cmake
-        - pip install -e .
+        - pip install .
         - pip install pytest
         - pytest .
         - pip wheel .
