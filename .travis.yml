@@ -66,6 +66,7 @@ matrix:
       script:
         - pip install cmake
         - pip install -e .
+        - ls -lht /c/Users/travis/build/openai/atari-py/atari_py/ale_interface/build
         - pip install pytest
         - pytest .
         - pip wheel .
