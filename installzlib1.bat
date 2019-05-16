@@ -5,4 +5,8 @@ cd atari_py/ale_interface/src/zlib
 cmake .
 cmake --build .
 
+cd ../..
+mkdir -p build
+cp src/zlib/Debug/zlibstaticd.lib build/z.lib
+
 
