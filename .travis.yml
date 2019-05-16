@@ -66,8 +66,7 @@ matrix:
 
       script:
         - pip install cmake
-        - curl -O https://zlib.net/zlib1211.zip && unzip zlib1211.zip && cd zlib-1.2.11 && cmake .
-        - ./installzlib.bat
+        - ./installzlib1.bat
         - cat /c/Users/travis/build/openai/atari-py/install.log
         - make build -C atari_py/ale_interface
         - pip install -e .
