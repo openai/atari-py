@@ -13,6 +13,7 @@
 #define __ROMS_HPP__
 
 #include <string>
+#include <algorithm>
 
 struct RomSettings;
 
