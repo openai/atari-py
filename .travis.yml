@@ -65,7 +65,7 @@ matrix:
 
       script:
         - pip install cmake
-        - installzlib.bat
+        - ./installzlib.bat
         - make build -C atari_py/ale_interface
         - pip install -e .
         - ls -lht /c/Users/travis/build/openai/atari-py/atari_py/ale_interface/build
