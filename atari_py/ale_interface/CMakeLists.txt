@@ -114,6 +114,7 @@ endif(UNIX)
 
 include_directories(
   ${SOURCE_DIR}
+  ${SOURCE_DIR}/src/zlib
   ${SOURCE_DIR}/common
   ${SOURCE_DIR}/controllers
   ${SOURCE_DIR}/emucore
