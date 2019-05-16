@@ -33,6 +33,7 @@
 #ifndef __ROMSETTINGS_HPP__
 #define __ROMSETTINGS_HPP__
 
+#include <algorithm>
 #include "../common/Constants.h"
 #include "../emucore/Serializer.hxx"
 #include "../emucore/Deserializer.hxx"
