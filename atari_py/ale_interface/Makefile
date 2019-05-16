@@ -1,7 +1,7 @@
 .PHONY: build clean
 
 build:
-	mkdir -p build && cd build && cmake .. && make -j4
+	mkdir -p build && cd build && cmake .. && cmake --build .
 
 clean:
 	rm -rf build
