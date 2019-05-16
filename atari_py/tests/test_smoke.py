@@ -14,3 +14,8 @@ def test_smoke():
     (screen_width,screen_height) = ale.getScreenDims()
     arr = np.zeros((screen_height, screen_width, 4), dtype=np.uint8)
     ale.getScreenRGB(arr)
+
+if __name__ == '__main__':
+    print('smoke test')
+    test_smoke()
+    print('done!')
