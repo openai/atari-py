@@ -13,7 +13,6 @@ option(BUILD_C_LIB "Build ALE C Library (needed for Python interface)" ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS")
 add_definitions(-DHAVE_INTTYPES)
 set(LINK_LIBS z)
-list(APPEND LINK_LIBS shlwapi)
 
 if(USE_RLGLUE)
   add_definitions(-D__USE_RLGLUE)

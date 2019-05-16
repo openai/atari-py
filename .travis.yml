@@ -57,7 +57,6 @@ matrix:
       install:
         - choco install --yes python3
         - choco install --yes make
-        - choco install --yes curl
         - export PATH=/c/Python37:/c/Python37/Scripts:$PATH
         - echo $PATH
         - which python
