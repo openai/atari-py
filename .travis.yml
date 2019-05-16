@@ -68,6 +68,7 @@ matrix:
         - pip install cmake
         - ./installzlib1.bat
         - ls atari_py/ale_interface/src/zlib
+        - make build -C atari_py/ale_interface 
         - pip install -e .
         - ls -lht /c/Users/travis/build/openai/atari-py/atari_py/ale_interface/build
         - pip install pytest
