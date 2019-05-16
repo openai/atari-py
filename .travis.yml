@@ -72,7 +72,7 @@ matrix:
         - pip install -e .
         - ls -lht /c/Users/travis/build/openai/atari-py/atari_py/ale_interface/build
         - ls -lht atari_py/ale_interface/build
-        - python atari_py/tests/test_smoke
+        - python atari_py/tests/test_smoke.py
         # - pip install pytest
         #- pytest .
         - pip wheel .
