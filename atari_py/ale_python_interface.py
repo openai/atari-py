@@ -15,7 +15,7 @@ if os.name == 'posix':
                                             'ale_interface/build/libale_c.so'))
 else:
     ale_lib = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__),
-                                            'ale_interface/build/ale_c.dll'))
+                                            'ale_interface/build/Debug/ale_c.dll'))
 
 ale_lib.ALE_new.argtypes = None
 ale_lib.ALE_new.restype = c_void_p
