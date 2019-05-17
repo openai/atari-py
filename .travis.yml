@@ -72,7 +72,7 @@ matrix:
         - pip install .
         - ls -lht /c/Users/travis/build/openai/atari-py/atari_py/ale_interface/build
         - ls -lht atari_py/ale_interface/build
-        # - pip install pytest
-        # - pytest .
         - pip install wheel && pip wheel . -w wheelhouse
+        - pip install pytest
+        - rm -rf atari_py pytest --pyargs atari_py
 
