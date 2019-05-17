@@ -66,14 +66,12 @@ matrix:
       script:
         - pip install cmake
         - ./installzlib1.bat
-        - ls atari_py/ale_interface/src/zlib
         # - make build -C atari_py/ale_interface 
         # - cp atari_py/ale_interface/build/Debug/ale_c.dll atari_py/ale_interface/build/ale_c.dll
         - pip install .
-        - ls -lht /c/Users/travis/build/openai/atari-py/atari_py/ale_interface/build
-        - ls -lht atari_py/ale_interface/build
         - pip install wheel && pip wheel . -w wheelhouse
         - ls -lht wheelhouse
+        - rm -rf atari_py
         - pip install pytest
-        - rm -rf atari_py pytest --pyargs atari_py
+        - pytest --pyargs atari_py
 
