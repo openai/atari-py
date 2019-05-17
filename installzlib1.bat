@@ -2,7 +2,7 @@ curl -O https://zlib.net/zlib1211.zip
 unzip zlib1211.zip 
 cp -r zlib-1.2.11 atari_py/ale_interface/src/zlib
 cd atari_py/ale_interface/src/zlib
-cmake .
+cmake -DCMAKE_GENERATOR_PLATFORM=x64 . 
 cmake --build .
 
 cd ../..
