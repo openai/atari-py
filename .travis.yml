@@ -71,8 +71,8 @@ matrix:
         # - pip install .
         - pip install wheel && pip wheel . -w wheelhouse
         - ls wheelhouse/atari_py* 
-        - pip install $(ls wheelhouse/atari_py*)
-        - rm -rf atari_py
-        - pip install pytest
-        - pytest --pyargs atari_py.tests
+        # - pip install $(ls wheelhouse/atari_py*)
+        # - rm -rf atari_py
+        # - pip install pytest
+        # - pytest --pyargs atari_py.tests
 
