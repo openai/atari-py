@@ -1,74 +1,39 @@
 language: sh
 env:
   global:
-    - REPO_DIR=.
-    - BUILD_COMMIT=$TRAVIS_COMMIT
-    - PLAT=x86_64
-
-install: 
-  - git clone https://github.com/matthew-brett/multibuild && cd multibuild && git checkout 254ad28 && cd ..
-  - . multibuild/common_utils.sh
-  - . multibuild/travis_steps.sh
-  - before_install 
-  - build_wheel $REPO_DIR $PLAT
-script: 
-  - install_run $PLAT
-
-after_success:
-  - ./deploy.sh
-
-    
+  - REPO_DIR=.
+  - BUILD_COMMIT=$TRAVIS_COMMIT
+  - PLAT=x86_64
+install:
+- git clone https://github.com/matthew-brett/multibuild && cd multibuild && git checkout
+  254ad28 && cd ..
+- ". multibuild/common_utils.sh"
+- ". multibuild/travis_steps.sh"
+- before_install
+- build_wheel $REPO_DIR $PLAT
+script:
+- install_run $PLAT
 matrix:
   include:
-
-#     - os: linux
-#       env:
-#         - MB_PYTHON_VERSION=3.5
-#     
-#     - os: linux
-#       env:
-#         - MB_PYTHON_VERSION=3.6
-#  
-#     - os: linux
-#       env:
-#         - MB_PYTHON_VERSION=3.7
-# 
-# 
-#     - os: osx
-#       osx_image: xcode8.3
-#       env:
-#         - MB_PYTHON_VERSION=3.5
-#         - DEPLOY_SDIST=true
-#  
-#     - os: osx
-#       osx_image: xcode8.3
-#       env:
-#         - MB_PYTHON_VERSION=3.6
-#  
-#     - os: osx
-#       osx_image: xcode8.3
-#       env:
-#         - MB_PYTHON_VERSION=3.7
- 
-    - os: windows
-      env:
-        - MB_PYTHON_VERSION=3.6
- 
-      install:
-        - choco install --yes python3
-        - choco install --yes make
-        - export PATH=/c/Python37:/c/Python37/Scripts:$PATH
-        - echo $PATH
-        - which python
-        - which pip
-        - pip install virtualenv
-
-      script:
-        - pip install cmake
-        - ./installzlib.bat
-        - pip install wheel && pip wheel . -w wheelhouse
-        # - pip install $(ls wheelhouse/atari_py*)
-        # - rm -rf atari_py
-        # - pip install pytest
-        # - pytest --pyargs atari_py.tests
-
+  - os: windows
+    env:
+    - MB_PYTHON_VERSION=3.6
+    install:
+    - choco install --yes python3
+    - choco install --yes make
+    - export PATH=/c/Python37:/c/Python37/Scripts:$PATH
+    - echo $PATH
+    - which python
+    - which pip
+    - pip install virtualenv
+    script:
+    - pip install cmake
+    - "./installzlib.bat"
+deploy:
+  provider: pypi
+  user: peterz-openai
+  distributions: bdist_wheel
+  on:
+    branch: bc-ssl
+  password:
+    secure: ceMj3TRPd2oChl3nh+CW7+hSwN2LzfuV9Lxw4dnTFJlbdx7HUH1m/meEslS0tUqhdW7WdqE+uwRqmMZaAIDB0R4qzoTORhPeHahg3RK7OK/XJnafAObG9bsfNiz4MZ4MWXq5/t5vg9LvQEZcWLXgUxYcNAJlmRAZXDK21JMUdX/P4pESJC/BJW2xWvS5w82PMNHlA7nUJ5aRqL2PMaaEnLN9uovBxo89yhGDahoKP1NkekEWzJP0Z4zQQ9gVO3ncNXa3+1roLruJ64DZ8bIuyutFaIlr57XzK8Lr1R54q/U2iJVxrYOU2Q/TNuXuB2dKqly5tAAxY1ASbLf/k3/pJ+23DozAvlWuY1Ux6vhxx55R9Ma2u4wBFvEMCV+Ys2kVm9O6waoSJEUptQ0FQOrep/umTanSK85iAJgCyGYybsRczWpm+i3M7fLrEWWxWudOQwhQEMbYKv4en/uBad5ovyMgqnr+RO/ZQAdIa6iJ9vupLmRtkoIcTcW1F29yTmFmQ2K9kdKFsuQnr4+0mt3rXqn3HDdIz30S6AfhslY22fymXjbB3FiCQu6f6SWq3v3oaEkJcnEe9UNTRQ2ybClAobwHolhUEzDrh1NdNQ2KKRgxrdRLZwsVw7Fpz/r5l2NnlfCvQIdUPYqEXjSb1vVLsRI9EK50qXjBtORUIBwRkw8=
