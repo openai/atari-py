@@ -34,19 +34,26 @@
 #define __ROMSETTINGS_HPP__
 
 #include <algorithm>
+#include <memory>
+#include <stdexcept>
+
 #include "../common/Constants.h"
 #include "../emucore/Serializer.hxx"
 #include "../emucore/Deserializer.hxx"
+#include "../environment/stella_environment_wrapper.hpp"
 
 class System;
 
-
 // rom support interface
-struct RomSettings {
+class RomSettings {
+
+public:
+    RomSettings();
+
     virtual ~RomSettings() {}
 
     // reset
-    virtual void reset() = 0;
+    virtual void reset(){};
 
     // is end of game
     virtual bool isTerminal() const = 0;
@@ -76,7 +83,7 @@ struct RomSettings {
     virtual bool isLegal(const Action &a) const;
 
     // Remaining lives.
-    virtual const int lives() { return isTerminal() ? 0 : 1; }
+    virtual int lives() { return isTerminal() ? 0 : 1; }
 
     // Returns a restricted (minimal) set of actions. If not overriden, this is all actions.
     virtual ActionVect getMinimalActionSet();
@@ -87,6 +94,19 @@ struct RomSettings {
     // Returns a list of actions that are required to start the game.
     // By default this is an empty list.
     virtual ActionVect getStartingActions();
+
+    // Returns a list of mode that the game can be played in. 
+    // By default, there is only one available mode.
+    virtual ModeVect getAvailableModes();
+
+    // Set the mode of the game. The given mode must be
+    // one returned by the previous function.
+    virtual void setMode(game_mode_t, System &system,
+                         std::unique_ptr<StellaEnvironmentWrapper> environment);
+
+    // Returns a list of difficulties that the game can be played in.
+    // By default, there is only one available difficulty.
+    virtual DifficultyVect getAvailableDifficulties();
 };
 
 

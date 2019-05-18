@@ -1,5 +1,5 @@
 /* *****************************************************************************
- * The lines 70 and 77 are based on Xitari's code, from Google Inc.
+ * The method lives() is based on Xitari's code, from Google Inc.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -49,6 +49,9 @@ class GravitarSettings : public RomSettings {
         // the rom-name
         const char* rom() const { return "gravitar"; }
 
+        // get the available number of modes
+        unsigned int getNumModes() const { return 5; }
+
         // create a new instance of the rom
         RomSettings* clone() const;
 
@@ -67,7 +70,16 @@ class GravitarSettings : public RomSettings {
         // Gravitar requires the fire action to start the game
         ActionVect getStartingActions();
 
-        virtual const int lives() { return isTerminal() ? 0 : m_lives; }
+        virtual int lives() { return isTerminal() ? 0 : m_lives; }
+
+        // returns a list of mode that the game can be played in
+        // in this game, there are 5 available modes
+        ModeVect getAvailableModes();
+
+        // set the mode of the game
+        // the given mode must be one returned by the previous function
+        void setMode(game_mode_t, System &system,
+                     std::unique_ptr<StellaEnvironmentWrapper> environment); 
 
     private:
 

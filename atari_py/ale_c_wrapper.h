@@ -20,9 +20,25 @@ extern "C" {
   int act(ALEInterface *ale,int action){return ale->act((Action)action);}
   bool game_over(ALEInterface *ale){return ale->game_over();}
   void reset_game(ALEInterface *ale){ale->reset_game();}
-  void getLegalActionSet(ALEInterface *ale,int *actions){
+  void getAvailableModes(ALEInterface *ale,int *availableModes) {
+    ModeVect modes_vect = ale->getAvailableModes();
+    for(unsigned int i = 0; i < ale->getAvailableModes().size(); i++){
+      availableModes[i] = modes_vect[i];
+    }
+  }
+  int getAvailableModesSize(ALEInterface *ale) {return ale->getAvailableModes().size();}
+  void setMode(ALEInterface *ale, int mode) {ale->setMode(mode);}
+  void getAvailableDifficulties(ALEInterface *ale,int *availableDifficulties) {
+    DifficultyVect difficulties_vect = ale->getAvailableDifficulties();
+    for(unsigned int i = 0; i < ale->getAvailableDifficulties().size(); i++){
+      availableDifficulties[i] = difficulties_vect[i];
+    }
+  }
+  int getAvailableDifficultiesSize(ALEInterface *ale) {return ale->getAvailableDifficulties().size();}
+  void setDifficulty(ALEInterface *ale, int difficulty) {ale->setDifficulty(difficulty);}
+  void getLegalActionSet(ALEInterface *ale,int *actions) {
     ActionVect action_vect = ale->getLegalActionSet();
-    for(unsigned int i = 0;i < ale->getLegalActionSet().size();i++){
+    for(unsigned int i = 0; i < ale->getLegalActionSet().size(); i++){
       actions[i] = action_vect[i];
     }
   }
@@ -58,8 +74,9 @@ extern "C" {
     size_t screen_size = w*h;
     pixel_t *ale_screen_data = ale->getScreen().getArray();
 
-    ale->theOSystem->colourPalette().applyPaletteRGB(output_buffer, ale_screen_data, screen_size);
+    ale->theOSystem->colourPalette().applyPaletteRGB(output_buffer, ale_screen_data, screen_size );
   }
+
 
   void getScreenRGB2(ALEInterface *ale, unsigned char *output_buffer){
     size_t w = ale->getScreen().width();
@@ -75,6 +92,7 @@ extern "C" {
         output_buffer[j++] = (zrgb>>0)&0xff;
     }
   }
+
 
   void getScreenGrayscale(ALEInterface *ale, unsigned char *output_buffer){
     size_t w = ale->getScreen().width();
