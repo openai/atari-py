@@ -1,5 +1,5 @@
 /* *****************************************************************************
- * The lines 70 and 77 are based on Xitari's code, from Google Inc.
+ * The method lives() is based on Xitari's code, from Google Inc.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License version 2
@@ -67,7 +67,11 @@ class UpNDownSettings : public RomSettings {
         // UpNDown requires the fire action to start the game
         ActionVect getStartingActions();
 
-        virtual const int lives() { return isTerminal() ? 0 : m_lives; }
+        virtual int lives() { return isTerminal() ? 0 : m_lives; }
+
+        // returns a list of difficulties that the game can be played in
+        // in this game, there are 4 available difficulties
+        DifficultyVect getAvailableDifficulties();
 
     private:
 

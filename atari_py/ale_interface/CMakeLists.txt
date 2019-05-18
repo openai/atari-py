@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 project(ale)
-set(ALEVERSION "0.5")
+set(ALEVERSION "0.6")
 
 
 option(USE_SDL "Use SDL" OFF)
@@ -10,7 +10,7 @@ option(BUILD_CPP_LIB "Build C++ Shared Library" OFF)
 option(BUILD_CLI "Build ALE Command Line Interface" OFF)
 option(BUILD_C_LIB "Build ALE C Library (needed for Python interface)" ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS")
 add_definitions(-DHAVE_INTTYPES)
 set(LINK_LIBS z)
 
@@ -28,8 +28,9 @@ if(USE_SDL)
     list(APPEND LINK_LIBS ${SDL_LIBRARY} ${SDL_MAIN_LIBRARY})
   else()
     MESSAGE("SDL 1.2 not found: You may need to manually edit CMakeLists.txt or run \"cmake -i\" to specify your SDL path.")
-    # Uncomment below to specify the path to your SDL library. Run "locate libSDL" if unsure.
+    # Uncomment below to specify the path to your SDL library and header file. Run "locate libSDL" and "locate SDL.h" if unsure.
     # link_directories(path_to_your_SDL)
+    # include_directories(path_to_your_SDL_header)
     if(APPLE)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Cocoa")
       list(APPEND LINK_LIBS sdl sdlmain)
@@ -127,10 +128,15 @@ include_directories(
   ${SOURCE_DIR}/external/TinyMT
 )
 
+if(NOT BUILD_CPP_LIB AND BUILD_EXAMPLES)
+  set(BUILD_CPP_LIB ON)
+  MESSAGE("Enabling C++ library to support examples.")
+endif()
+
 if(BUILD_CPP_LIB)
   add_library(ale-lib SHARED ${SOURCE_DIR}/ale_interface.cpp ${SOURCES})
   set_target_properties(ale-lib PROPERTIES OUTPUT_NAME ale)
-  set_target_properties(ale-lib PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_target_properties(ale-lib PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   if(UNIX)
     install(TARGETS ale-lib
       DESTINATION ${LIB_INSTALL_DIR})
@@ -141,7 +147,7 @@ endif()
 if(BUILD_CLI)
   add_executable(ale-bin ${SOURCE_DIR}/main.cpp ${SOURCE_DIR}/ale_interface.cpp ${SOURCES})
   set_target_properties(ale-bin PROPERTIES OUTPUT_NAME ale)
-  set_target_properties(ale-bin PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_target_properties(ale-bin PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   if(UNIX)
     install(TARGETS ale-bin
       DESTINATION ${BIN_INSTALL_DIR})
@@ -152,7 +158,7 @@ endif()
 if(BUILD_C_LIB)
   add_library(ale-c-lib SHARED ${CMAKE_CURRENT_SOURCE_DIR}/../ale_c_wrapper.cpp ${SOURCE_DIR}/ale_interface.cpp ${SOURCES})
   set_target_properties(ale-c-lib PROPERTIES OUTPUT_NAME ale_c)
-  set_target_properties(ale-c-lib PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+  set_target_properties(ale-c-lib PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   if(UNIX)
     install(TARGETS ale-c-lib
       DESTINATION ${LIB_INSTALL_DIR})
@@ -164,25 +170,34 @@ if(BUILD_EXAMPLES)
   # Shared library example.
   link_directories(${CMAKE_CURRENT_SOURCE_DIR})
   add_executable(sharedLibraryInterfaceExample ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/sharedLibraryInterfaceExample.cpp)
-  set_target_properties(sharedLibraryInterfaceExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/doc/examples)
+  set_target_properties(sharedLibraryInterfaceExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples)
   set_target_properties(sharedLibraryInterfaceExample PROPERTIES OUTPUT_NAME ${PROJECT_NAME}-sharedLibraryInterfaceExample)
+
   target_link_libraries(sharedLibraryInterfaceExample ale)
   target_link_libraries(sharedLibraryInterfaceExample ${LINK_LIBS})
   add_dependencies(sharedLibraryInterfaceExample ale-lib)
 
   # Fifo interface example.
   link_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
   add_executable(fifoInterfaceExample ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/fifoInterfaceExample.cpp)
-  set_target_properties(fifoInterfaceExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/doc/examples)
+  set_target_properties(fifoInterfaceExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples)
   set_target_properties(fifoInterfaceExample PROPERTIES OUTPUT_NAME ${PROJECT_NAME}-fifoInterfaceExample)
   target_link_libraries(fifoInterfaceExample ale)
   target_link_libraries(fifoInterfaceExample ${LINK_LIBS})
   add_dependencies(fifoInterfaceExample ale-lib)
 
+  add_executable(sharedLibraryInterfaceWithModesExample ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/sharedLibraryInterfaceWithModesExample.cpp)
+  set_target_properties(sharedLibraryInterfaceWithModesExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples)
+  set_target_properties(sharedLibraryInterfaceWithModesExample PROPERTIES OUTPUT_NAME ${PROJECT_NAME}-sharedLibraryInterfaceWithModesExample)
+  target_link_libraries(sharedLibraryInterfaceWithModesExample ale)
+  target_link_libraries(sharedLibraryInterfaceWithModesExample ${LINK_LIBS})
+  add_dependencies(sharedLibraryInterfaceWithModesExample ale-lib)
+
   # Example showing how to record an Atari 2600 video.
   if (USE_SDL)
     add_executable(videoRecordingExample ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/videoRecordingExample.cpp)
-    set_target_properties(videoRecordingExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/doc/examples)
+    set_target_properties(videoRecordingExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples)
     set_target_properties(videoRecordingExample PROPERTIES OUTPUT_NAME ${PROJECT_NAME}-videoRecordingExample)
     target_link_libraries(videoRecordingExample ale)
     target_link_libraries(videoRecordingExample ${LINK_LIBS})
@@ -192,14 +207,14 @@ endif()
 
 if(USE_RLGLUE)
   add_executable(RLGlueAgent ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/RLGlueAgent.c)
-  set_target_properties(RLGlueAgent PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/doc/examples)
+  set_target_properties(RLGlueAgent PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples)
   set_target_properties(RLGlueAgent PROPERTIES OUTPUT_NAME ${PROJECT_NAME}-RLGlueAgent)
   target_link_libraries(RLGlueAgent rlutils)
   target_link_libraries(RLGlueAgent rlagent)
   target_link_libraries(RLGlueAgent rlgluenetdev)
 
   add_executable(RLGlueExperiment ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/RLGlueExperiment.c)
-  set_target_properties(RLGlueExperiment PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/doc/examples)
+  set_target_properties(RLGlueExperiment PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples)
   set_target_properties(RLGlueExperiment PROPERTIES OUTPUT_NAME ${PROJECT_NAME}-RLGlueExperiment)
   target_link_libraries(RLGlueExperiment rlutils)
   target_link_libraries(RLGlueExperiment rlexperiment)
