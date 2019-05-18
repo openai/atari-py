@@ -65,7 +65,7 @@ matrix:
 
       script:
         - pip install cmake
-        - ./installzlib1.bat
+        - ./installzlib.bat
         - pip install wheel && pip wheel . -w wheelhouse
         - pip install $(ls wheelhouse/atari_py*)
         - rm -rf atari_py
