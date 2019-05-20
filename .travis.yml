@@ -4,6 +4,7 @@ env:
   - REPO_DIR=.
   - BUILD_COMMIT=$TRAVIS_COMMIT
   - PLAT=x86_64
+  - secure: LGDR4d3yLKwhvfN/9SOe8sMJ6Z3mms9a2G8LPvIMhXAFoY/1ULuEn+m8a4K0hcz8/nXdbMIj6qHb3LgmJ77UVVIwU4CoYe9XyjavdrCIWr4oOKZGcckhzjNjRzsdfMNha6dZShyACECdAa5CPsWBd7mxwt5fdICvrpDFcUGgUMT7GdY4voyQinf5ta7yDAAnKDM4dCH8y4Hrhz7VB0eNPkJCPpihaIy6tygcwduojJiqji4AYsDp8QPnijJpCxuKCqkPxfEE4nsXjZHnxjNJv7oWS2kq15XfVPlRbEzK5VoNZVn6dIkrHQ6U4wL8k7pg6FDySHkIwkM93wEAqH1YrHbo0YA1Cw0P3jjdTbhpFMbznGXJ8YnoykpzX3N1vIt47dlpI19y1om3aR+JC7pg3s8LvMYDMc978cFBXsfwxGdPpVV8xCriXqHDZXYYp03R/EF3T8mKPL5sP8ytDvvSEMi+/LSL29ijK28iZ4yYJnVtC97FoVjRR+ygLgt9f3PfW0BwsgaCHf7igAvRVFZBeUss4Z+pm4B704A3gMh5F1uYH1pn20jBUMF7M5xESxszdKtdzA/gXz23SIJO7RWUo7ZEF/pQ0++C7mu4yh+eYP1T2Pp1OeJADGRmPAQArzpQdS0BV1tQn+bQOkLZqbHcWObB3EmjU4Ohxnif5bWpDZY=
 install:
 - git clone https://github.com/matthew-brett/multibuild && cd multibuild && git checkout
   254ad28 && cd ..
@@ -13,6 +14,8 @@ install:
 - build_wheel $REPO_DIR $PLAT
 script:
 - install_run $PLAT
+after_success:
+- ./deploy.sh
 matrix:
   include:
   - os: windows
@@ -29,11 +32,11 @@ matrix:
     script:
     - pip install cmake
     - "./installzlib.bat"
-deploy:
-  provider: pypi
-  user: peterz-openai
-  distributions: bdist_wheel
-  on:
-    branch: windows_build
-  password:
-    secure: ceMj3TRPd2oChl3nh+CW7+hSwN2LzfuV9Lxw4dnTFJlbdx7HUH1m/meEslS0tUqhdW7WdqE+uwRqmMZaAIDB0R4qzoTORhPeHahg3RK7OK/XJnafAObG9bsfNiz4MZ4MWXq5/t5vg9LvQEZcWLXgUxYcNAJlmRAZXDK21JMUdX/P4pESJC/BJW2xWvS5w82PMNHlA7nUJ5aRqL2PMaaEnLN9uovBxo89yhGDahoKP1NkekEWzJP0Z4zQQ9gVO3ncNXa3+1roLruJ64DZ8bIuyutFaIlr57XzK8Lr1R54q/U2iJVxrYOU2Q/TNuXuB2dKqly5tAAxY1ASbLf/k3/pJ+23DozAvlWuY1Ux6vhxx55R9Ma2u4wBFvEMCV+Ys2kVm9O6waoSJEUptQ0FQOrep/umTanSK85iAJgCyGYybsRczWpm+i3M7fLrEWWxWudOQwhQEMbYKv4en/uBad5ovyMgqnr+RO/ZQAdIa6iJ9vupLmRtkoIcTcW1F29yTmFmQ2K9kdKFsuQnr4+0mt3rXqn3HDdIz30S6AfhslY22fymXjbB3FiCQu6f6SWq3v3oaEkJcnEe9UNTRQ2ybClAobwHolhUEzDrh1NdNQ2KKRgxrdRLZwsVw7Fpz/r5l2NnlfCvQIdUPYqEXjSb1vVLsRI9EK50qXjBtORUIBwRkw8=
+ deploy:
+#   provider: pypi
+#   user: peterz-openai
+#   distributions: bdist_wheel
+#   on:
+#     branch: windows_build
+#   password:
+#     secure: ceMj3TRPd2oChl3nh+CW7+hSwN2LzfuV9Lxw4dnTFJlbdx7HUH1m/meEslS0tUqhdW7WdqE+uwRqmMZaAIDB0R4qzoTORhPeHahg3RK7OK/XJnafAObG9bsfNiz4MZ4MWXq5/t5vg9LvQEZcWLXgUxYcNAJlmRAZXDK21JMUdX/P4pESJC/BJW2xWvS5w82PMNHlA7nUJ5aRqL2PMaaEnLN9uovBxo89yhGDahoKP1NkekEWzJP0Z4zQQ9gVO3ncNXa3+1roLruJ64DZ8bIuyutFaIlr57XzK8Lr1R54q/U2iJVxrYOU2Q/TNuXuB2dKqly5tAAxY1ASbLf/k3/pJ+23DozAvlWuY1Ux6vhxx55R9Ma2u4wBFvEMCV+Ys2kVm9O6waoSJEUptQ0FQOrep/umTanSK85iAJgCyGYybsRczWpm+i3M7fLrEWWxWudOQwhQEMbYKv4en/uBad5ovyMgqnr+RO/ZQAdIa6iJ9vupLmRtkoIcTcW1F29yTmFmQ2K9kdKFsuQnr4+0mt3rXqn3HDdIz30S6AfhslY22fymXjbB3FiCQu6f6SWq3v3oaEkJcnEe9UNTRQ2ybClAobwHolhUEzDrh1NdNQ2KKRgxrdRLZwsVw7Fpz/r5l2NnlfCvQIdUPYqEXjSb1vVLsRI9EK50qXjBtORUIBwRkw8=
