@@ -32,7 +32,7 @@ matrix:
     script:
     - pip install cmake
     - "./installzlib.bat"
- deploy:
+#  deploy:
 #   provider: pypi
 #   user: peterz-openai
 #   distributions: bdist_wheel
