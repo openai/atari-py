@@ -30,6 +30,7 @@ matrix:
     - pip install cmake
     - "./installzlib.bat"
     - make
+    - make clean
     - pip install wheel && pip wheel . -w wheelhouse --no-deps
     - ls wheelhouse/atari_py* 
     - rm -rf atari_py
