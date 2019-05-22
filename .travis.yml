@@ -31,7 +31,7 @@ matrix:
     - "./installzlib.bat"
     # - make
     # - make clean
-    - pip install wheel && pip wheel . -w wheelhouse --no-deps
+    - pip install wheel && pip wheel . -w wheelhouse --no-deps -vvv
     - ls wheelhouse/atari_py* 
     - rm -rf atari_py
     - unzip $(ls wheelhouse/atari_py*)
