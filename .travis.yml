@@ -29,16 +29,13 @@ matrix:
     script:
     - pip install cmake
     - "./installzlib.bat"
-    # - make
-    # - make clean
+    - make
     - pip install wheel && pip wheel . -w wheelhouse --no-deps -vvv
     - ls wheelhouse/atari_py* 
-    # - rm -rf atari_py
-    # - unzip $(ls wheelhouse/atari_py*)
-    # - rm -rf atari_py*
-    # - pip install $(ls wheelhouse/atari_py*)
-    # - pip install pytest
-    # - pytest --pyargs atari_py.tests
+    - rm -rf atari_py*
+    - pip install $(ls wheelhouse/atari_py*)
+    - pip install pytest
+    - pytest --pyargs atari_py.tests
     
 deploy:
   provider: s3
