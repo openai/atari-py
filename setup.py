@@ -10,6 +10,7 @@ with open(os.path.join(os.path.dirname(__file__), 'atari_py', 'package_data.txt'
 
 class Build(build_ext):
     def run(self):
+        return
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         cmd = ['make', 'build', '-j', str(cores_to_use)]
         try:
@@ -29,7 +30,7 @@ class CMakeExtension(Extension):
         self.sourcedir = os.path.abspath(sourcedir)
 
 setup(name='atari-py',
-      version='0.1.8',
+      version='0.1.9',
       description='Python bindings to Atari games',
       url='https://github.com/openai/atari-py',
       author='OpenAI',
