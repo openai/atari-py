@@ -1,7 +1,7 @@
 set -ex
-choco install --yes python3 --version $MB_PYTHON_VERSION 
+choco install --yes python3 --version $PY_VER
 choco install --yes make
-export PYROOT=/c/Python${MB_PYTHON_VERSION//./}
+export PYROOT=/c/Python${PY_VER//./}
 export PATH=$PYROOT:$PYROOT/Scripts:$PATH
 pip install cmake pytest
 ./installzlib.bat
