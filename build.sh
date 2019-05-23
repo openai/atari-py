@@ -1,13 +1,8 @@
 #!/bin/bash
 set -ex
 
-if [ $(uname) == 'Linux' ]; then
+if [ $(uname) == 'Linux' ] || [ $(uname) == 'Darwin' ]; then
     ./multibuild.sh
-    exit 0
+else
+    ./win_build.sh
 fi
-
-if [ $(uname) == 'Darwin' ]; then
-    ./multibuild.sh
-    exit 0
-fi
-./win_build.sh
