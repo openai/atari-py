@@ -29,7 +29,7 @@ matrix:
 
 jobs:
   include:
-   - stage: deploy
+   - stage: "abc"
       # os: linux
       # env: 
       #   - PY_VER=3.6
