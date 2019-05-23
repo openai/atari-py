@@ -1,7 +1,7 @@
 .PHONY: build clean
 
 build:
-	mkdir -p build && cd build && cmake -DCMAKE_GENERATOR_PLATFORM=x64 .. && cmake --build . && cp Debug/ale_c.dll .. && ls -lt ..
+	mkdir -p build && cd build && cmake -DCMAKE_GENERATOR_PLATFORM=x64 .. && cmake --build .
 
 clean:
 	rm -rf build
