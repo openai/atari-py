@@ -56,7 +56,6 @@ if(APPLE)
 endif()
 
 if(WIN32 OR MINGW)
-  # add_subdirectory(zlib-1.2.11)
   # include_directories(${SOURCE_DIR}/zlib)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
   list(APPEND SOURCES ${SOURCE_DIR}/os_dependent/SettingsWin32.cxx ${SOURCE_DIR}/os_dependent/OSystemWin32.cxx ${SOURCE_DIR}/os_dependent/FSNodeWin32.cxx)
