@@ -2,30 +2,38 @@ language: sh
 env:
 install: ""
 script: ./build.sh
-os:
-    - windows
-    - linux
-    - osx
-env:
-    - PY_VER=3.7
-    - PY_VER=3.6
-    - PY_VER=3.5
-osx_image: xcode8.3
-matrix:
-    exclude:
-        os: windows
-        env: PY_VER=3.5
-  
-deploy:
-  provider: s3
-  access_key_id: AKIAIR7X3BP26ZWUNFPA
-  skip_cleanup: true
-  secret_access_key:
-    secure: wUNE0AxIZ3rQVO6pUXQyfOVI4UN/4bgTb+y8566pFYQ68mzZEW3XNl96n8HtkHGYuJGnNGWGbGKcp2a1MCoiyePR+NnmoUxCledUffU+s88Sxg9Qj7DW8JOLImocNXG+8y2OeC+QjmrkB109inM0c2T+ESeLZi9yALaLSxVEKToXB1EBDtOohjelNcA8xoP9yb4H6yoT01XLNkno2o9fmKc+ZXtLi9xZVpMX1aH0Hs2pchm0WmE7d93XVD0K9ZM/2q1yT8ojJngKAbpJeJQSSSJStNpFBIp7hc+2slFP9/QOCPJQZQuIjJkHj2iXEMgIrerbFgl/n5konQiZFHwDZbmubQR8cfVOmr/+By8n9h13rzL7OpqCx84f4QuaRifRY6vMnu0nqbo7M7vkW0fEzcMOEpn1fcL0ulOOFc9Oedyvn08flK2M3DX10rglncK+MkGdWjH23K/1PLNOCIdNO8kWO+yvuCbdx1oJzMcpr5w52Sh+pWt4xXk1TQvXtzPVxLxf+mGumHvU1wSFW2IbBcLIv3C/BeqeNbyRNIrXT2rfaOzDj8LEXOq3IIdfgKmHx2a4Iz3V3S2a5vJiXeBtr9G4LtH/k9eRRyr6CKN+HqSZSRnwL0W8i3u7QvcP6wSF91lJCpAJpsuu5faE3RKfW/hUd/gsmo1f1tcJZEaCkzo=
-  bucket: games-wheels
-  local-dir: wheelhouse
-  upload-dir: atari-py
-  acl: public_read
-  on:
-    repo: openai/atari-py
-    tags: true
+jobs:
+ include:
+    - stage: compile
+        os:
+            - windows
+            - linux
+            - osx
+        env:
+            - PY_VER=3.7
+            - PY_VER=3.6
+            - PY_VER=3.5
+        osx_image: xcode8.3
+        matrix:
+            exclude:
+                os: windows
+                env: PY_VER=3.5
+          
+        deploy:
+          provider: s3
+          access_key_id: AKIAIR7X3BP26ZWUNFPA
+          skip_cleanup: true
+          secret_access_key:
+            secure: wUNE0AxIZ3rQVO6pUXQyfOVI4UN/4bgTb+y8566pFYQ68mzZEW3XNl96n8HtkHGYuJGnNGWGbGKcp2a1MCoiyePR+NnmoUxCledUffU+s88Sxg9Qj7DW8JOLImocNXG+8y2OeC+QjmrkB109inM0c2T+ESeLZi9yALaLSxVEKToXB1EBDtOohjelNcA8xoP9yb4H6yoT01XLNkno2o9fmKc+ZXtLi9xZVpMX1aH0Hs2pchm0WmE7d93XVD0K9ZM/2q1yT8ojJngKAbpJeJQSSSJStNpFBIp7hc+2slFP9/QOCPJQZQuIjJkHj2iXEMgIrerbFgl/n5konQiZFHwDZbmubQR8cfVOmr/+By8n9h13rzL7OpqCx84f4QuaRifRY6vMnu0nqbo7M7vkW0fEzcMOEpn1fcL0ulOOFc9Oedyvn08flK2M3DX10rglncK+MkGdWjH23K/1PLNOCIdNO8kWO+yvuCbdx1oJzMcpr5w52Sh+pWt4xXk1TQvXtzPVxLxf+mGumHvU1wSFW2IbBcLIv3C/BeqeNbyRNIrXT2rfaOzDj8LEXOq3IIdfgKmHx2a4Iz3V3S2a5vJiXeBtr9G4LtH/k9eRRyr6CKN+HqSZSRnwL0W8i3u7QvcP6wSF91lJCpAJpsuu5faE3RKfW/hUd/gsmo1f1tcJZEaCkzo=
+          bucket: games-wheels
+          local-dir: wheelhouse
+          upload-dir: atari-py
+          acl: public_read
+          on:
+            repo: openai/atari-py
+            tags: true
+    - stage: deploy_to_pypi
+      os: ubuntu
+      install: ""
+      script:
+        - echo "test"
