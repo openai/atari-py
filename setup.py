@@ -8,14 +8,15 @@ import sys
 with open(os.path.join(os.path.dirname(__file__), 'atari_py', 'package_data.txt')) as f:
     package_data = [line.rstrip() for line in f.readlines()]
 
+
 class Build(build_ext):
     def run(self):
-        if os.name != 'posix':
-            # silly patch to disable build steps on windows, as we are building externally
+        if os.name != 'posix' and not self.inplace:
+            # silly patch to disable build steps on windows, as we are doing compilation externally
             return
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         try:
-            cwd = os.path.join(self.build_lib, 'atari_py', 'ale_interface', 'build')
+            cwd = os.path.join('' if self.inplace else self.build_lib, 'atari_py', 'ale_interface', 'build')
             # cwd = os.path.join('atari_py', 'ale_interface', 'build')
             os.makedirs(cwd, exist_ok=True)
             subprocess.check_call(['cmake', '..'], cwd=cwd)
