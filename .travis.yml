@@ -5,40 +5,12 @@ script: ./build.sh
 os:
     - windows
     - linux
-    # - osx
+    - osx
 env:
     - PY_VER=3.7
     - PY_VER=3.6
+    - PY_VER=3.5
 osx_image: xcode8.3
-# matrix:
-#   include:
-#   - os: linux
-#     env:
-#       - MB_PYTHON_VERSION=3.5
-# 
-#   - os: linux
-#     env:
-#       - MB_PYTHON_VERSION=3.6
-#   - os: linux
-#     env:
-#       - MB_PYTHON_VERSION=3.7
-# 
-#   - os: windows
-#     env:
-#       - MB_PYTHON_VERSION=3.7
-#     install: ""
-#     script: win_build.sh
-#   - os: windows
-#     env:
-#       - MB_PYTHON_VERSION=3.7
-#     install: ""
-#     script: win_build.sh
-#   - os: windows
-#     env:
-#       - MB_PYTHON_VERSION=3.7
-#     install: ""
-#     script: ./win_build.sh
-
   
 deploy:
   provider: s3
