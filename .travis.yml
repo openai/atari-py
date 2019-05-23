@@ -2,8 +2,8 @@ language: sh
 script: ./build.sh
 os: 
     - linux
-    - windows
-    - osx
+    # - windows
+    # - osx
 env:
     - PY_VER=3.6
     - PY_VER=3.7
