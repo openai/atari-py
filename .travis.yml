@@ -29,8 +29,8 @@ deploy:
     repo: openai/atari-py
     tags: true
 
- jobs:
- include:
+jobs:
+  include:
    - stage: deploy_to_pypi
       os: linux
       env: 
