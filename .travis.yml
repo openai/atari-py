@@ -10,7 +10,7 @@ jobs:
       script:
         - echo "test"
 
-script: ./build.sh
+# script: ./build.sh
 os:
     - windows
     - linux
