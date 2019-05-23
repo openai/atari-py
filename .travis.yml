@@ -15,21 +15,33 @@ script:
 - install_run $PLAT
 matrix:
   include:
+#   - os: linux
+#     env:
+#       - MB_PYTHON_VERSION=3.5
+# 
+#   - os: linux
+#     env:
+#       - MB_PYTHON_VERSION=3.6
+#   - os: linux
+#     env:
+#       - MB_PYTHON_VERSION=3.7
+# 
+#   - os: windows
+#     env:
+#       - MB_PYTHON_VERSION=3.7
+#     install: ""
+#     script: win_build.sh
+#   - os: windows
+#     env:
+#       - MB_PYTHON_VERSION=3.7
+#     install: ""
+#     script: win_build.sh
   - os: windows
     env:
       - MB_PYTHON_VERSION=3.7
     install: ""
-    script: win_build.sh
-  # - os: windows
-  #   env:
-  #     - MB_PYTHON_VERSION=3.7
-  #   install: ""
-  #   script: win_build.sh
-  # - os: windows
-  #   env:
-  #     - MB_PYTHON_VERSION=3.7
-  #   install: ""
-  #   script: win_build.sh
+    script: ./win_build.sh
+
   
 deploy:
   provider: s3
