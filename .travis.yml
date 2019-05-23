@@ -1,20 +1,17 @@
 language: sh
 env:
-  global:
-  - REPO_DIR=.
-  - BUILD_COMMIT=$TRAVIS_COMMIT
-  - PLAT=x86_64
-install:
-- git clone https://github.com/matthew-brett/multibuild && cd multibuild && git checkout
-  254ad28 && cd ..
-- ". multibuild/common_utils.sh"
-- ". multibuild/travis_steps.sh"
-- before_install
-- build_wheel $REPO_DIR $PLAT
-script:
-- install_run $PLAT
-matrix:
-  include:
+install: ""
+script: ./build.sh
+os:
+    - windows
+    - linux
+    # - osx
+env:
+    - PY_VER=3.7
+    - PY_VER=3.6
+osx_image: xcode8.3
+# matrix:
+#   include:
 #   - os: linux
 #     env:
 #       - MB_PYTHON_VERSION=3.5
@@ -36,11 +33,11 @@ matrix:
 #       - MB_PYTHON_VERSION=3.7
 #     install: ""
 #     script: win_build.sh
-  - os: windows
-    env:
-      - MB_PYTHON_VERSION=3.7
-    install: ""
-    script: ./win_build.sh
+#   - os: windows
+#     env:
+#       - MB_PYTHON_VERSION=3.7
+#     install: ""
+#     script: ./win_build.sh
 
   
 deploy:
