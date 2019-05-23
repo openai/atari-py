@@ -1,25 +1,24 @@
 language: sh
 env:
 install: ""
-script: ./build.sh
+os:
+    - windows
+    - linux
+    - osx
+env:
+    - PY_VER=3.7
+    - PY_VER=3.6
+    - PY_VER=3.5
+osx_image: xcode8.3
+matrix:
+    exclude:
+        os: windows
+        env: PY_VER=3.5
 jobs:
  include:
     - stage: compile
-        os:
-            - windows
-            - linux
-            - osx
-        env:
-            - PY_VER=3.7
-            - PY_VER=3.6
-            - PY_VER=3.5
-        osx_image: xcode8.3
-        matrix:
-            exclude:
-                os: windows
-                env: PY_VER=3.5
-          
-        deploy:
+      script: ./build.sh
+      deploy:
           provider: s3
           access_key_id: AKIAIR7X3BP26ZWUNFPA
           skip_cleanup: true
@@ -33,7 +32,9 @@ jobs:
             repo: openai/atari-py
             tags: true
     - stage: deploy_to_pypi
-      os: ubuntu
+      os: linux
+      env: 
+        - PY_VER=3.6
       install: ""
       script:
         - echo "test"
