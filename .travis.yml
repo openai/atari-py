@@ -29,7 +29,10 @@ deploy:
 
 jobs:
   include:
-   - stage: deploy_to_pypi
-     script: echo "test"
-
-
+   - stage: "Deploy to PyPI"
+     script: ./deploy_to_pypi.sh
+     env:
+        - TWINE_USERNAME=peterz-openai
+        - AWS_ACCESS_KEY_ID=AKIAIR7X3BP26ZWUNFPA
+        - secure: "SyhACCi80Ejps8g7B0+Aos1VSdzocz9N5SNhqCm8+f7fDedOXi8WsbyJKViAV7+NL2e0F66clKZDARqGYxiEDnXavRle8vQ/fF4XZ/gleuh8J9mwLVtOrdURK9zmA6USpviPQarELfpOCqi1sNblK+JL9zFbKji1GwKDcL/OPSkW/3FDTfz0UZBCftLh0wtDF6BOrspYji7Xxjsrj3m/59pS1Dq4IprliPD4GB8luLipxB8d9vezxi+GBLvMnlZJnngkNEueARqrPjGNmXRhduyMezNvMyBt4jVj+zLSyrn118aUk87NByatTDlapzo1Br8BdxAEiNNOIfvwaTI2Y+CZWOkiR5qvaPoPjT7BH2F6Ji9q/sjQQiDMzQQl1F99vbTibQUH8u/fj1h8mvg3oAObRxyltGGjA+VkDdwlUrOVP3JhZ7HNNKA3n4WDFxMcKl3gJguHd2tVozYsHOEsuNmWF5RMSP+ZZDNwhGGC1A83jnctAcMHXuerzKTYg5smCqLRUWGOaGbab13Z1ish5RCTgQXF0gAAsASwiJwRliZrVKuzWuxDJkf8Ly+2WT+TBumd2ezzohPYvy5e7rEjK05kGdY+x0MeQXWIcT6go7WjgmbryXNmVl64wNQyzhOALhs+ZiW81svV1mcr0uc52LqitN8F005VRuPfOMko7g8=" 
+        - secure: "xprU2DixxZLvQSpeCl++QSGnPEprC8RfEk3//CH3sz2Qwt/xHBX3YfK8dVRBOeKa3+ixv2hJMqAYVjAGlzAu14TfesTEOivaWtdlGgBpDWaofYz0v1OgyFnEpfSHTOyHhlpfxZX1jNabu5xt7XQ5+/CWpxLrFIpufVKZO9DNiLhbBmGPVnnrsml9/PQijCnHssiGlLDYxLQOT/1DITjG8EhmNvcj2RY/IYFVRhCV9iANW65OObbpQ08gx0rtrf+u5cy9xmNdXPEVofd3PZM1SRPCLyf//siUdglRMtAsB0fMCV+oojQEL3yjqL0hlc7qc+b5ZiFDppsQ+RMjV/gtOt7N630rdInRBHtDKsnUpLK8OshTxKeVLEbX3jjXV3Dbg8AcUoXjspFdsAX5cCw4m228iZkLTMG4kFa0zYCx26pjTzPtWmh3if2PYyMPniJ1BNRta5S50/z2Jkpo+sE6MuVXN2xyK4+IDBNV9dfsaAw58WrNg7ZDFepgAYf1egriHoNT5zlPXsWnLFB4LI/3JkbQAotH+ybL/qgMT87KYTGRY40um2Pb76eozhmaaxL4xSoSty0CspXf2gfGZoHOqlehtm8uDmvpSFJVn7Gbaz4JUaDgClxMxEQZQPbL5QGIc53pBAKTRBC1HRHSFd8lOqZjVAcX9i2boT+e8qbkKDg="
