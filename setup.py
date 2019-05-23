@@ -17,7 +17,6 @@ class Build(build_ext):
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         try:
             cwd = os.path.join('' if self.inplace else self.build_lib, 'atari_py', 'ale_interface', 'build')
-            # cwd = os.path.join('atari_py', 'ale_interface', 'build')
             os.makedirs(cwd, exist_ok=True)
             subprocess.check_call(['cmake', '..'], cwd=cwd)
             subprocess.check_call(['cmake', '--build', '.'], cwd=cwd)
@@ -34,7 +33,7 @@ class CMakeExtension(Extension):
         self.sourcedir = os.path.abspath(sourcedir)
 
 setup(name='atari-py',
-      version='0.1.10',
+      version='0.1.11',
       description='Python bindings to Atari games',
       url='https://github.com/openai/atari-py',
       author='OpenAI',
