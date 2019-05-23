@@ -397,3 +397,4 @@ atari_roms/wizard_of_wor.bin
 atari_roms/yars_revenge.bin
 atari_roms/zaxxon.bin
 package_data.txt
+tests/*.py
