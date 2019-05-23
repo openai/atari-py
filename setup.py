@@ -15,8 +15,8 @@ class Build(build_ext):
             return
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         try:
-            # cwd = os.path.join(self.build_lib, 'atari_py', 'ale_interface', 'build')
-            cwd = os.path.join('atari_py', 'ale_interface', 'build')
+            cwd = os.path.join(self.build_lib, 'atari_py', 'ale_interface', 'build')
+            # cwd = os.path.join('atari_py', 'ale_interface', 'build')
             os.makedirs(cwd, exist_ok=True)
             subprocess.check_call(['cmake', '..'], cwd=cwd)
             subprocess.check_call(['cmake', '--build', '.'], cwd=cwd)
