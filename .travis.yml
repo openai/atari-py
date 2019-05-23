@@ -4,8 +4,8 @@ install: ""
 script: ./build.sh
 os:
     - windows
-    # - linux
-    # - osx
+    - linux
+    - osx
 env:
     - PY_VER=3.7
     - PY_VER=3.6
