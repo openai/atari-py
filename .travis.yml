@@ -17,26 +17,25 @@ matrix:
   include:
   - os: windows
     env:
-    # - MB_PYTHON_VERSION=3.5
-    #- MB_PYTHON_VERSION=3.6
-    - MB_PYTHON_VERSION=3.7
+      - MB_PYTHON_VERSION=3.5
+      - MB_PYTHON_VERSION=3.6
+      - MB_PYTHON_VERSION=3.7
     install:
-    - choco install --yes python3 --version $MB_PYTHON_VERSION 
-    - choco install --yes make
-    - export PYROOT=/c/Python${MB_PYTHON_VERSION//./}
-    - export PATH=$PYROOT:$PYROOT/Scripts:$PATH
-    - echo $PATH
-    - pip install cmake
-    - "./installzlib.bat"
-    - make
-    - cp atari_py/ale_interface/build/Debug/ale_c.dll atari_py/ale_interface/ale_c.dll
+      - choco install --yes python3 --version $MB_PYTHON_VERSION 
+      - choco install --yes make
+      - export PYROOT=/c/Python${MB_PYTHON_VERSION//./}
+      - export PATH=$PYROOT:$PYROOT/Scripts:$PATH
+      - pip install cmake
+      - "./installzlib.bat"
+      - make
+      - cp atari_py/ale_interface/build/Debug/ale_c.dll atari_py/ale_interface/ale_c.dll
     script:
-    - pip install wheel && pip wheel . -w wheelhouse --no-deps -vvv
-    - ls wheelhouse/atari_py* 
-    - rm -rf atari_py*
-    - pip install $(ls wheelhouse/atari_py*)
-    - pip install pytest
-    - pytest --pyargs atari_py.tests
+      - pip install wheel && pip wheel . -w wheelhouse --no-deps -vvv
+      - ls wheelhouse/atari_py* 
+      - rm -rf atari_py*
+      - pip install $(ls wheelhouse/atari_py*)
+      - pip install pytest
+      - pytest --pyargs atari_py.tests
     
 deploy:
   provider: s3
