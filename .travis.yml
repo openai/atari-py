@@ -9,10 +9,10 @@ env:
     - PY_VER=3.6
     - PY_VER=3.5
 osx_image: xcode8.3
-matrix:
-    exclude:
-        os: windows
-        env: PY_VER=3.5
+# matrix:
+#     exclude:
+#         os: windows
+#         env: PY_VER=3.5
 # deploy:
 #   provider: s3
 #   access_key_id: AKIAIR7X3BP26ZWUNFPA
@@ -29,12 +29,11 @@ matrix:
 
 jobs:
   include:
-   - stage: "abc"
+   - stage: deploy
       # os: linux
       # env: 
       #   - PY_VER=3.6
       # install: ""
-      script:
-        - echo "test"
+      script: echo "test"
 
 
