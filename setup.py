@@ -10,7 +10,9 @@ with open(os.path.join(os.path.dirname(__file__), 'atari_py', 'package_data.txt'
 
 class Build(build_ext):
     def run(self):
-        # return
+        if os.name != 'posix':
+            # silly patch to disable build steps on windows, as we are building externally
+            return
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         cmd = ['make', 'build', '-j', str(cores_to_use)]
         try:
