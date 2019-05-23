@@ -49,4 +49,4 @@ deploy:
   acl: public_read
   on:
     repo: openai/atari-py
-    branch: windows_build
+    tags: true
