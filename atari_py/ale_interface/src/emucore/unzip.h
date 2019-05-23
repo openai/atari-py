@@ -41,6 +41,13 @@
 #ifndef _unz_H
 #define _unz_H
 
+/* Gentoo removed OF from their copy of zconf.h
+ * (https://bugs.gentoo.org/show_bug.cgi?id=383179) */
+/* but our copy of minizip needs it. */
+#ifndef OF
+#define OF(args) args
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
