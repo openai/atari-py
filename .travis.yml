@@ -1,6 +1,15 @@
 language: sh
 env:
-install: ""
+jobs:
+  include:
+   - stage: deploy_to_pypi
+      # os: linux
+      # env: 
+      #   - PY_VER=3.6
+      # install: ""
+      script:
+        - echo "test"
+
 script: ./build.sh
 os:
     - windows
@@ -29,12 +38,4 @@ matrix:
 #     repo: openai/atari-py
 #     tags: true
 
-# jobs:
-#   include:
-#    - stage: deploy_to_pypi
-#       # os: linux
-#       # env: 
-#       #   - PY_VER=3.6
-#       # install: ""
-#       script:
-#         - echo "test"
+
