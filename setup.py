@@ -18,7 +18,7 @@ class Build(build_ext):
             cwd = os.path.join(self.build_lib, 'atari_py', 'ale_interface', 'build')
             os.makedirs(cwd, exist_ok=True)
             subprocess.check_call(['cmake', '..'], cwd=cwd)
-            subprocess.check_call(['cmake', '--build', '..'], cwd=cwd)
+            subprocess.check_call(['cmake', '--build', '.'], cwd=cwd)
         except subprocess.CalledProcessError as e:
             sys.stderr.write("Could not build atari-py: %s. (HINT: are you sure cmake is installed? You might also be missing a library. Atari-py requires: zlib [installable as 'apt-get install zlib1g-dev' on Ubuntu].)\n" % e)
             raise
