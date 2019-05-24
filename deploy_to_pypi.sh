@@ -14,5 +14,5 @@ source .venv/bin/activate
 
 pip install awscli twine
 mkdir -p wheelhouse
-aws s3 cp --recursive s3://games-wheels/atari-py/atari_py-${TRAVIS_TAG} wheelhouse/
+aws s3 cp --recursive s3://games-wheels/atari-py/${TRAVIS_TAG} wheelhouse/
 twine upload --verbose wheelhouse/atari_py*
