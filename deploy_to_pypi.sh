@@ -23,7 +23,7 @@ URLPREFIX="https://s3-us-west-2.amazonaws.com/games-wheels/atari-py/${TRAVIS_TAG
 
 cd wheelhouse
 for s in $SUFFIXES; do
-  for p in $PLATFORM; do
+  for p in $PLATFORMS; do
     curl -O ${URLPREFIX}${p}${s}
   done;
 done
