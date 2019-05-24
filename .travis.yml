@@ -28,6 +28,9 @@ deploy:
     tags: true
 
 jobs:
+  # this extra stage is due to Travis bug that prevets deploying to pypi from windows or usage of 
+  # secret env variables on windows. Instead of doing either, we are deploying to s3 first, and
+  # then using a separate stage to download files from s3 and deploy them to pypi. 
   include:
    - stage: "Deploy to PyPI"
      script: ./deploy_to_pypi.sh
