@@ -1,13 +1,13 @@
 language: sh
-script: echo "hi" # ./build.sh
+script: ./build.sh
 os: 
     - linux
-    # - windows
-    # - osx
+    - windows
+    - osx
 env:
     - PY_VER=3.6
-    # - PY_VER=3.7
-    # - PY_VER=3.5
+    - PY_VER=3.7
+    - PY_VER=3.5
 osx_image: xcode8.3
 matrix:
     exclude:
