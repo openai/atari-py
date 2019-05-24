@@ -33,7 +33,7 @@ class CMakeExtension(Extension):
         self.sourcedir = os.path.abspath(sourcedir)
 
 setup(name='atari-py',
-      version='0.1.13',
+      version='0.1.14',
       description='Python bindings to Atari games',
       url='https://github.com/openai/atari-py',
       author='OpenAI',
