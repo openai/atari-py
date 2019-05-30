@@ -1,4 +1,5 @@
-ale_interface/build/*.so
+ale_interface/build/libale_c.so
+ale_interface/build/ale_c.dll
 ale_interface/build/ale
 ale_c_wrapper.cpp
 ale_c_wrapper.h
@@ -396,3 +397,4 @@ atari_roms/wizard_of_wor.bin
 atari_roms/yars_revenge.bin
 atari_roms/zaxxon.bin
 package_data.txt
+tests/*.py

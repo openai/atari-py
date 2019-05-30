@@ -10,7 +10,7 @@ option(BUILD_CPP_LIB "Build C++ Shared Library" OFF)
 option(BUILD_CLI "Build ALE Command Line Interface" OFF)
 option(BUILD_C_LIB "Build ALE C Library (needed for Python interface)" ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wunused -fPIC -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS")
 add_definitions(-DHAVE_INTTYPES)
 set(LINK_LIBS z)
 
@@ -55,7 +55,8 @@ if(APPLE)
   set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 endif()
 
-if(WINDOWS OR MINGW)
+if(WIN32 OR MINGW)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
   list(APPEND SOURCES ${SOURCE_DIR}/os_dependent/SettingsWin32.cxx ${SOURCE_DIR}/os_dependent/OSystemWin32.cxx ${SOURCE_DIR}/os_dependent/FSNodeWin32.cxx)
 else()
   list(APPEND SOURCES ${SOURCE_DIR}/os_dependent/SettingsUNIX.cxx ${SOURCE_DIR}/os_dependent/OSystemUNIX.cxx ${SOURCE_DIR}/os_dependent/FSNodePOSIX.cxx)
@@ -112,6 +113,7 @@ endif(UNIX)
 
 include_directories(
   ${SOURCE_DIR}
+  ${SOURCE_DIR}/zlib
   ${SOURCE_DIR}/common
   ${SOURCE_DIR}/controllers
   ${SOURCE_DIR}/emucore
