@@ -1,52 +1,42 @@
+language: sh
+script: ./build.sh
+os: 
+    - linux
+    - windows
+    - osx
 env:
-  global:
-    - REPO_DIR=.
-    - BUILD_COMMIT=$TRAVIS_COMMIT
-    - PLAT=x86_64
-
-install: 
-  - git clone https://github.com/matthew-brett/multibuild && cd multibuild && git checkout 254ad28 && cd ..
-  - . multibuild/common_utils.sh
-  - . multibuild/travis_steps.sh
-  - before_install 
-  - build_wheel $REPO_DIR $PLAT
-script: 
-  - install_run $PLAT
-
-after_success:
-  - ./deploy.sh
-
-    
+    - PY_VER=3.6
+    - PY_VER=3.7
+    - PY_VER=3.5
+osx_image: xcode8.3
 matrix:
+    exclude:
+        os: windows
+        env: PY_VER=3.5
+deploy:
+  provider: s3
+  access_key_id: AKIAIR7X3BP26ZWUNFPA
+  skip_cleanup: true
+  secret_access_key:
+    secure: wUNE0AxIZ3rQVO6pUXQyfOVI4UN/4bgTb+y8566pFYQ68mzZEW3XNl96n8HtkHGYuJGnNGWGbGKcp2a1MCoiyePR+NnmoUxCledUffU+s88Sxg9Qj7DW8JOLImocNXG+8y2OeC+QjmrkB109inM0c2T+ESeLZi9yALaLSxVEKToXB1EBDtOohjelNcA8xoP9yb4H6yoT01XLNkno2o9fmKc+ZXtLi9xZVpMX1aH0Hs2pchm0WmE7d93XVD0K9ZM/2q1yT8ojJngKAbpJeJQSSSJStNpFBIp7hc+2slFP9/QOCPJQZQuIjJkHj2iXEMgIrerbFgl/n5konQiZFHwDZbmubQR8cfVOmr/+By8n9h13rzL7OpqCx84f4QuaRifRY6vMnu0nqbo7M7vkW0fEzcMOEpn1fcL0ulOOFc9Oedyvn08flK2M3DX10rglncK+MkGdWjH23K/1PLNOCIdNO8kWO+yvuCbdx1oJzMcpr5w52Sh+pWt4xXk1TQvXtzPVxLxf+mGumHvU1wSFW2IbBcLIv3C/BeqeNbyRNIrXT2rfaOzDj8LEXOq3IIdfgKmHx2a4Iz3V3S2a5vJiXeBtr9G4LtH/k9eRRyr6CKN+HqSZSRnwL0W8i3u7QvcP6wSF91lJCpAJpsuu5faE3RKfW/hUd/gsmo1f1tcJZEaCkzo=
+  bucket: games-wheels
+  local-dir: wheelhouse
+  upload-dir: atari-py/$TRAVIS_TAG
+  acl: public_read
+  on:
+    repo: openai/atari-py
+    tags: true
+
+jobs:
+  # this extra stage is due to Travis bug that prevets deploying to pypi from windows or usage of 
+  # secret env variables on windows. Instead of doing either, we are deploying to s3 first, and
+  # then using a separate stage to download files from s3 and deploy them to pypi. 
   include:
-
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.5
-    
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.6
- 
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.7
-
-
-    - os: osx
-      osx_image: xcode8.3
-      env:
-        - MB_PYTHON_VERSION=3.5
-        - DEPLOY_SDIST=true
- 
-    - os: osx
-      osx_image: xcode8.3
-      env:
-        - MB_PYTHON_VERSION=3.6
- 
-    - os: osx
-      osx_image: xcode8.3
-      env:
-        - MB_PYTHON_VERSION=3.7
- 
- 
+   - stage: "Deploy to PyPI"
+     script: ./deploy_to_pypi.sh
+     env:
+        - TWINE_USERNAME=peterz-openai
+        - AWS_ACCESS_KEY_ID=AKIAIR7X3BP26ZWUNFPA
+        - AWS_DEFAULT_REGION=us-west-2
+        - secure: "i0qbR3wG2OvJWVBKnAVkgtNIPPxoNQz8KBn+c9RBAWZw0XDsjkUwsDZMTXzll1Do24xLb9FVti2iq7GsNvHcCzltSGOLv6UDm2ywJc4Bz/Fyho27A0kYGe6W/FwtEt+VTkx4z0+7tNOb4KVhs26OmIGdKMJwNibnU86rRtzf05Iq7xS+8Mi/9j09oC9ZXACzOFTmbQe98Gq93ROo+7wfpCVJip9QigJTSZhE7axBEtpXlZ5//T2Eo2bxbJs5f9tNiMrLRy8NMYq1B/he9HevpxlqE15+wJs9exaDClWLtsb7trFKSnmrqtUeXI3aUIQwLgQfaYJlvvmSBUtJxxyk5QHLn3+0u6TCA9ZbHaEElXSLrcexjSEp37+HXH0Z69JzTYn0pVX4IvrmuLhgg4X3z7Ys3SyIe8Tq39QubQ8TWM8bzBN5H0VYObY35BmLl68k2AF61Rq0obJS48ekguzf88DwI9UzxYm8LnlsgpyeX1iLJ6Sy9xdP3S/5onP1+bzaDZ7JNMabNmJ22ZjqPyBp+mUyBjfab9ouDS07CNAPmyQV6VWSL8EaD9QawWB0khgKoen+NNFGeivEIgCRanP9Rg7mpw7Px9elwbl2hXGco7EGdZFPV89uHWEhL2nHUmxVjaRUNlSXjDrwI6f8vlMfbHU5PskxlrG047F/is3gQ00="
+        - secure: "NZRMo04bBX2X7phT29rQKDklPFVbnqMoUAhrVFjTLxvAqsQdericyalMjXsE79IA02uZEsHfS45P9YXzgHC4uCZI6694kOZfhmBtQ0FxeJ5M3Zx6IRyMhf92rk7F/DRcRBe78JIBkgTXDJCyQoEX1/RIYIz723BSzRGosOJa1xUub8MQ7Rl3TF54j9JAshBNBTpIw1tORWo3K1A8FucQNgI3N7DucWhg+C3D7cxZok5xwz7FoXHt+Xv7wFvCETaNIsmu/3EI15K9Y43XXQ2rBc46g41SDX7f1rwVNl0D8kStjyDdhdQODDdKPMe3dl6Lckz0qMTaoTUnWL91L+qBAFHsC2imWJVNGL+/4iyTRQAsq/hl7GYNcesfm7kCXNcCjSeyx3ZkOOgZ0okFKWZK51RuKjlCcKgDOMSInCW8vR2rRK699wAfePr38t5TO5E2uQ+hF52NMbzDKw9C6azX4UaWuKPio8oxseOWfLKSYZTCVirBikLM8m4LABCZyKiMlTR1SdzxQmrLAxgnWaD+QYY4SoN4fButDjONOARFKF5e3njzVQo2nHmXb1EATOmnQ4pjKcJezSccIcmYeWpPskXWSmJbWi81zwHz/AyqH6fEnAWmVj0RKjrBfyCZCtEGBikQ9KTJuVHupwNT17CyZKUxtxBpYOpFnk+mLLom3Ak="
