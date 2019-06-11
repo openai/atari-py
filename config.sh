@@ -6,7 +6,7 @@ function pre_build {
 }
 
 function run_tests {
-    pip install gym[atari]
+    pip install gym
     python -c "import gym; gym.make('Pong-v4')"
     pip install pytest
     pytest --pyargs atari_py.tests
