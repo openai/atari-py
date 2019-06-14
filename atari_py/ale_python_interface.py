@@ -12,10 +12,10 @@ import six
 
 if os.name == 'posix':
     ale_lib = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__),
-                                            'ale_interface/build/libale_c.so'))
+                                            'ale_interface/libale_c.so'))
 else:
     ale_lib = cdll.LoadLibrary(os.path.join(os.path.dirname(__file__),
-                                            'ale_interface/build/ale_c.dll'))
+                                            'ale_interface/ale_c.dll'))
 
 ale_lib.ALE_new.argtypes = None
 ale_lib.ALE_new.restype = c_void_p
@@ -45,6 +45,18 @@ ale_lib.game_over.argtypes = [c_void_p]
 ale_lib.game_over.restype = c_bool
 ale_lib.reset_game.argtypes = [c_void_p]
 ale_lib.reset_game.restype = None
+ale_lib.getAvailableModes.argtypes = [c_void_p, c_void_p]
+ale_lib.getAvailableModes.restype = None
+ale_lib.getAvailableModesSize.argtypes = [c_void_p]
+ale_lib.getAvailableModesSize.restype = c_int
+ale_lib.setMode.argtypes = [c_void_p, c_int]
+ale_lib.setMode.restype = None
+ale_lib.getAvailableDifficulties.argtypes = [c_void_p, c_void_p]
+ale_lib.getAvailableDifficulties.restype = None
+ale_lib.getAvailableDifficultiesSize.argtypes = [c_void_p]
+ale_lib.getAvailableDifficultiesSize.restype = c_int
+ale_lib.setDifficulty.argtypes = [c_void_p, c_int]
+ale_lib.setDifficulty.restype = None
 ale_lib.getLegalActionSet.argtypes = [c_void_p, c_void_p]
 ale_lib.getLegalActionSet.restype = None
 ale_lib.getLegalActionSize.argtypes = [c_void_p]
@@ -157,6 +169,36 @@ class ALEInterface(object):
         ale_lib.getMinimalActionSet(self.obj, as_ctypes(act))
         return act
 
+    def getAvailableModes(self):
+        modes_size = ale_lib.getAvailableModesSize(self.obj)
+        modes = np.zeros((modes_size), dtype=np.intc)
+        ale_lib.getAvailableModes(self.obj, as_ctypes(modes))
+        return modes
+
+    def setMode(self, mode):
+        ale_lib.setMode(self.obj, int(mode))
+
+    def getAvailableDifficulties(self):
+        difficulties_size = ale_lib.getAvailableDifficultiesSize(self.obj)
+        difficulties = np.zeros((difficulties_size), dtype=np.intc)
+        ale_lib.getAvailableDifficulties(self.obj, as_ctypes(difficulties))
+        return difficulties
+
+    def setDifficulty(self, difficulty):
+        ale_lib.setDifficulty(self.obj, int(difficulty))
+
+    def getLegalActionSet(self):
+        act_size = ale_lib.getLegalActionSize(self.obj)
+        act = np.zeros((act_size), dtype=np.intc)
+        ale_lib.getLegalActionSet(self.obj, as_ctypes(act))
+        return act
+
+    def getMinimalActionSet(self):
+        act_size = ale_lib.getMinimalActionSize(self.obj)
+        act = np.zeros((act_size), dtype=np.intc)
+        ale_lib.getMinimalActionSet(self.obj, as_ctypes(act))
+        return act
+
     def getFrameNumber(self):
         return ale_lib.getFrameNumber(self.obj)
 
@@ -205,7 +247,6 @@ class ALEInterface(object):
             screen_data = np.empty((height, width,3), dtype=np.uint8)
         ale_lib.getScreenRGB(self.obj, as_ctypes(screen_data[:]))
         return screen_data
-
 
     def getScreenRGB2(self, screen_data=None):
         """This function fills screen_data with the data in RGB format.
