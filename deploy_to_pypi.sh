@@ -30,7 +30,7 @@ URLPREFIX="https://s3-us-west-2.amazonaws.com/games-wheels/atari-py/${TRAVIS_TAG
 cd wheelhouse
 for s in $SUFFIXES; do
   for p in $PY_VERS; do
-    curl -O ${URLPREFIX}${p}${s} || echo "${URLPREFIX}${p}{s} not found"
+    curl -O -f ${URLPREFIX}${p}${s} || echo "${URLPREFIX}${p}{s} not found"
   done;
 done
 
