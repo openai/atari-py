@@ -15,7 +15,7 @@ source .venv/bin/activate
 pip install awscli twine
 # make and deploy source archive
 python setup.py sdist
-twine upload --verbose dist/atari_py*
+twine upload --verbose dist/atari*
 
 # get the wheels generated at the previous stages and upload them as well 
 mkdir -p wheelhouse
@@ -34,4 +34,4 @@ for s in $SUFFIXES; do
   done;
 done
 
-twine upload --verbose atari_py*
+twine upload --verbose atari*
