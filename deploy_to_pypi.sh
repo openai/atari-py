@@ -20,7 +20,7 @@ env
 SUFFIXES="-manylinux1_x86_64.whl -win_amd64.whl -macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl"
 # SUFFIXES="-manylinux1_x86_64.whl"
 PY_VERS="-cp36-cp36m -cp37-cp37m"
-URLPREFIX="https://s3-us-west-2.amazonaws.com/games-wheels/atari-py/${TRAVIS_TAG}/atari_py-${TRAVIS_TAG}"
+URLPREFIX="https://s3-us-west-2.amazonaws.com/openai-kubernetes-sci-experiments/travis/atari-py/${TRAVIS_TAG}/atari_py-${TRAVIS_TAG}"
 
 cd wheelhouse
 for s in $SUFFIXES; do
