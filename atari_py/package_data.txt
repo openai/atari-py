@@ -1,4 +1,5 @@
 ale_interface/libale_c.so
+ale_interface/md5.txt
 ale_interface/ale_c.dll
 ale_c_wrapper.cpp
 ale_c_wrapper.h

@@ -20,9 +20,22 @@ To install via pip, run:
 That *should* install a correct binary verison for your OS. If that does not work (or if you would like get the latest-latest
 version, or you just want to tinker with the code yourself) see next paragraph. 
 
+## ROMs
+
+In order to import ROMS, you need to download `Roms.rar` from the [Atari 2600 VCS ROM Collection](http://www.atarimania.com/rom_collection_archive_atari_2600_roms.html) and extract the `.rar` file.  Once you've done that, run:
+
+`python -m atari_py.import_roms <path to folder>`
+
+This should print out the names of ROMs as it imports them.  The ROMs will be copied to your `atari_py` installation directory.
+
 ## Installation from source
 
   -  make sure you have `git`, `cmake` and `zlib1g` system packages installed 
   -  clone the repo
   -  run `pip install -e .`
 
+## Included ROMs
+
+The following non-commercial ROMs are included with atari-py for testing purposes:
+
+* Tetris26 by Colin Hughes
