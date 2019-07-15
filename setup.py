@@ -17,7 +17,8 @@ class Build(build_ext):
         cores_to_use = max(1, multiprocessing.cpu_count() - 1)
         try:
             cwd = os.path.join('' if self.inplace else self.build_lib, 'atari_py', 'ale_interface', 'build')
-            os.makedirs(cwd, exist_ok=True)
+            if not os.path.exists(cwd):
+                os.makedirs(cwd)
             subprocess.check_call(['cmake', '..'], cwd=cwd)
             subprocess.check_call(['cmake', '--build', '.'], cwd=cwd)
         except subprocess.CalledProcessError as e:
