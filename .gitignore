@@ -3,4 +3,5 @@ build
 *.egg-info
 dist
 *.pyc
+*.so
 .tox
