@@ -368,6 +368,7 @@ ale_interface/src/os_dependent/SettingsUNIX.hxx
 ale_interface/src/os_dependent/SettingsWin32.cxx
 ale_interface/src/os_dependent/SettingsWin32.hxx
 ale_interface/src/os_dependent/module.mk
+atari_roms/tetris.bin
 atari_ntsc_rgb_palette.h
 package_data.txt
 tests/*.py
