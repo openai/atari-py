@@ -6,8 +6,7 @@ function pre_build {
 }
 
 function run_tests {
-    pip install gym
-    python -c "import gym; gym.make('Pong-v4')"
+    python -c "import atari_py; ale = atari_py.ALEInterface(); ale.loadROM(atari_py.get_game_path('tetris'))"
     pip install pytest
     pytest --pyargs atari_py.tests
 }
