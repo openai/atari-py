@@ -30,7 +30,7 @@ This should print out the names of ROMs as it imports them.  The ROMs will be co
 
 ## Installation from source
 
-  -  make sure you have `git`, `cmake` and `zlib1g` system packages installed 
+  -  make sure you have `git`, `cmake`, `zlib1g`, and, on Linux, `zlib1g-dev` system packages installed 
   -  clone the repo
   -  run `pip install -e .`
 
