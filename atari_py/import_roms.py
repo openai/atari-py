@@ -4,7 +4,7 @@ import shutil
 import zipfile
 import argparse
 
-from .games import games_dir
+from .games import get_games_dir
 
 
 SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -41,7 +41,7 @@ def import_roms(dirpath="."):
         f.readline()
         for line in f:
             hexdigest, filename = line.strip().split(' ')
-            md5s[hexdigest] = os.path.join(games_dir(), filename)
+            md5s[hexdigest] = os.path.join(get_games_dir(), filename)
 
     def save_if_matches(f):
         hexdigest = _calc_md5(f)
