@@ -1,6 +1,8 @@
 build
+atari_roms/
 *.egg
 *.egg-info
 dist
 *.pyc
+*.so
 .tox
