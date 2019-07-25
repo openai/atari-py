@@ -2,9 +2,9 @@ import atari_py
 import numpy as np
 
 def test_smoke():
-    pong_path = atari_py.get_game_path('pong')
+    game_path = atari_py.get_game_path('tetris')
     ale = atari_py.ALEInterface()
-    ale.loadROM(pong_path)
+    ale.loadROM(game_path)
     action_set = ale.getMinimalActionSet()
 
     # Test stepping
