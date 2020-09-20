@@ -28,6 +28,15 @@ In order to import ROMS, you need to download `Roms.rar` from the [Atari 2600 VC
 
 This should print out the names of ROMs as it imports them.  The ROMs will be copied to your `atari_py` installation directory.
 
+You can alternatively use:
+
+```
+pip3 install autorom
+AutoROM
+```
+
+To automatically install ROMs for you
+
 ## Installation from source
 
   -  make sure you have `git`, `cmake`, `zlib1g`, and, on Linux, `zlib1g-dev` system packages installed 
