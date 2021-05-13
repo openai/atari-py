@@ -4,6 +4,9 @@ os:
 - linux
 - windows
 - osx
+arch:
+- amd64
+- arm64
 env:
 - PY_VER=3.6
 - PY_VER=3.7
