@@ -7,6 +7,7 @@ export MB_ML_VER=2014
 if [[ $TRAVIS_CPU_ARCH == "arm64" ]]
 then
   export PLAT=aarch64
+  export DOCKER_TEST_IMAGE=multibuild/xenial_arm64v8
 fi
 
 git clone https://github.com/matthew-brett/multibuild && cd multibuild && cd ..
