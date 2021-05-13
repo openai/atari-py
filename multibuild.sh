@@ -10,7 +10,7 @@ then
   export DOCKER_TEST_IMAGE=multibuild/xenial_arm64v8
 fi
 
-git clone https://github.com/matthew-brett/multibuild && cd multibuild && cd ..
+git clone https://github.com/matthew-brett/multibuild && cd multibuild && git checkout 45d97819e7d39dd2264b2c3cd353c26c4e1ebb74 && cd ..
 source multibuild/common_utils.sh
 source multibuild/travis_steps.sh
 before_install
