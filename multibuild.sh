@@ -3,7 +3,8 @@ export REPO_DIR=.
 export BUILD_COMMIT=$TRAVIS_COMMIT
 export PLAT=x86_64
 export MB_PYTHON_VERSION=$PY_VER
-if [[ $TRAVIS_CPU_ARCH -eq "arm64" ]]
+export MB_ML_VER=2014
+if [[ $TRAVIS_CPU_ARCH == "arm64" ]]
 then
   export PLAT=aarch64
 fi
