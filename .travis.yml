@@ -4,10 +4,14 @@ os:
 - linux
 - windows
 - osx
+arch:
+- amd64
+- arm64
 env:
 - PY_VER=3.6
 - PY_VER=3.7
-- PY_VER=3.5
+- PY_VER=3.8
+- PY_VER=3.9
 osx_image: xcode8.3
 matrix:
   exclude:
