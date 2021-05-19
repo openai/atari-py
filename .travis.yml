@@ -1,38 +1,40 @@
 language: sh
-script: "./build.sh"
-os:
-- linux
-- windows
-- osx
-arch:
-- amd64
-- arm64
-env:
-- PY_VER=3.6
-- PY_VER=3.7
-- PY_VER=3.8
-- PY_VER=3.9
-osx_image: xcode8.3
-matrix:
-  exclude:
-    os: windows
-    env: PY_VER=3.5
-deploy:
-  provider: s3
-  access_key_id: AKIAWAJNL6RI5SR2ILDN
-  skip_cleanup: true
-  region: us-west-2
-  secret_access_key:
-    secure: MNYHFopROJWJqG40NohznhS/ECpbqml//Xkk3YkiccaTeztHM1TWOYwWYpA73H5oPDlRrj82jEZqJUDRtwPO4T2EabDq7SLjlgtP4pcqFoW+Nrtha4ZQzVeoHiqsN3A8ZboR2t/nu+vMvGkY/pbqXMtuYbt0VDOCi2heFTXKuvbbloW2HBQAc6O3UQfgnRU8IFyLDbSFC23abA71Q6fIlTCdlk9/cs2zwP41AcjVpBoxq755EfxKej940ocjg2Q8hNko1Wz3T7lyUvN6n8MkfjE2GJSRDWsWnSiN5xcEUCfxbRG3cw30A8xglQcKNpA3H/L7x7ofUgkto9E/WyABgxLZi58CqmkCMu5C7nkxrWYAIMXEFBBWoht06wL5ks9Sjoo7fZ37B5tLY6A2bj8zpRbOW8hNE4BCn3OBavOY2bHey2zGe1XLGN2pLlvorpgrDB60HAKD9qyoIqQvKBJmyZICVRoQsb27SvwHJmnRtw8tt9Q807fTK7aYKarC3pkKw1xBG8Tjq3I3Oadg1lvd9QwFK7K9O2SWtMw8Z/ubN+Jw51MozNEWrB+75e3pQAvGd1eiYxoTtPXnB6TzNYn8it7GIToTqER91E4bcs6NIFA4ZoxPICqZlU+S0urrQjqroNTy5R8O6bsSwQtkOv4gu6GwY/JQwQYUfOebA0pCpAo=
-  bucket: openai-sci-artifacts
-  local-dir: wheelhouse
-  upload-dir: travis-builds/atari-py/$TRAVIS_TAG
-  acl: public_read
-  on:
-    repo: openai/atari-py
-    tags: true
+#       deploy:
+#       provider: s3
+#       access_key_id: AKIAWAJNL6RI5SR2ILDN
+#       skip_cleanup: true
+#       region: us-west-2
+#       secret_access_key:
+#         secure: MNYHFopROJWJqG40NohznhS/ECpbqml//Xkk3YkiccaTeztHM1TWOYwWYpA73H5oPDlRrj82jEZqJUDRtwPO4T2EabDq7SLjlgtP4pcqFoW+Nrtha4ZQzVeoHiqsN3A8ZboR2t/nu+vMvGkY/pbqXMtuYbt0VDOCi2heFTXKuvbbloW2HBQAc6O3UQfgnRU8IFyLDbSFC23abA71Q6fIlTCdlk9/cs2zwP41AcjVpBoxq755EfxKej940ocjg2Q8hNko1Wz3T7lyUvN6n8MkfjE2GJSRDWsWnSiN5xcEUCfxbRG3cw30A8xglQcKNpA3H/L7x7ofUgkto9E/WyABgxLZi58CqmkCMu5C7nkxrWYAIMXEFBBWoht06wL5ks9Sjoo7fZ37B5tLY6A2bj8zpRbOW8hNE4BCn3OBavOY2bHey2zGe1XLGN2pLlvorpgrDB60HAKD9qyoIqQvKBJmyZICVRoQsb27SvwHJmnRtw8tt9Q807fTK7aYKarC3pkKw1xBG8Tjq3I3Oadg1lvd9QwFK7K9O2SWtMw8Z/ubN+Jw51MozNEWrB+75e3pQAvGd1eiYxoTtPXnB6TzNYn8it7GIToTqER91E4bcs6NIFA4ZoxPICqZlU+S0urrQjqroNTy5R8O6bsSwQtkOv4gu6GwY/JQwQYUfOebA0pCpAo=
+#       bucket: openai-sci-artifacts
+#       local-dir: wheelhouse
+#       upload-dir: travis-builds/atari-py/$TRAVIS_TAG
+#       acl: public_read
+#       on:
+#         repo: openai/atari-py
+#         tags: true
 jobs:
   include:
+    - stage: Test
+      script: "./build.sh"
+      os:
+      - linux
+      - windows
+      - osx
+      arch:
+      - amd64
+      - arm64
+      env:
+      - PY_VER=3.6
+      - PY_VER=3.7
+      - PY_VER=3.8
+      - PY_VER=3.9
+      osx_image: xcode8.3
+      matrix:
+        exclude:
+          os: windows
+          env: PY_VER=3.5
+           
     - stage: Deploy to PyPI
       script: "./deploy_to_pypi.sh"
       env:
