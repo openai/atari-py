@@ -13,10 +13,6 @@ env:
 - PY_VER=3.8
 - PY_VER=3.9
 osx_image: xcode8.3
-matrix:
-  exclude:
-    os: windows
-    env: PY_VER=3.5
 deploy:
   provider: s3
   access_key_id: AKIAWAJNL6RI5SR2ILDN
