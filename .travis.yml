@@ -14,30 +14,37 @@ env:
 - PY_VER=3.9
 osx_image: xcode8.3
 deploy:
-  provider: s3
-  access_key_id: AKIAWAJNL6RI5SR2ILDN
-  skip_cleanup: true
-  region: us-west-2
-  secret_access_key:
-    secure: MNYHFopROJWJqG40NohznhS/ECpbqml//Xkk3YkiccaTeztHM1TWOYwWYpA73H5oPDlRrj82jEZqJUDRtwPO4T2EabDq7SLjlgtP4pcqFoW+Nrtha4ZQzVeoHiqsN3A8ZboR2t/nu+vMvGkY/pbqXMtuYbt0VDOCi2heFTXKuvbbloW2HBQAc6O3UQfgnRU8IFyLDbSFC23abA71Q6fIlTCdlk9/cs2zwP41AcjVpBoxq755EfxKej940ocjg2Q8hNko1Wz3T7lyUvN6n8MkfjE2GJSRDWsWnSiN5xcEUCfxbRG3cw30A8xglQcKNpA3H/L7x7ofUgkto9E/WyABgxLZi58CqmkCMu5C7nkxrWYAIMXEFBBWoht06wL5ks9Sjoo7fZ37B5tLY6A2bj8zpRbOW8hNE4BCn3OBavOY2bHey2zGe1XLGN2pLlvorpgrDB60HAKD9qyoIqQvKBJmyZICVRoQsb27SvwHJmnRtw8tt9Q807fTK7aYKarC3pkKw1xBG8Tjq3I3Oadg1lvd9QwFK7K9O2SWtMw8Z/ubN+Jw51MozNEWrB+75e3pQAvGd1eiYxoTtPXnB6TzNYn8it7GIToTqER91E4bcs6NIFA4ZoxPICqZlU+S0urrQjqroNTy5R8O6bsSwQtkOv4gu6GwY/JQwQYUfOebA0pCpAo=
-  bucket: openai-sci-artifacts
-  local-dir: wheelhouse
-  upload-dir: travis-builds/atari-py/$TRAVIS_TAG
-  acl: public_read
-  on:
-    repo: openai/atari-py
-    tags: true
-jobs:
-  include:
-    - stage: Deploy to PyPI
-      script: "./deploy_to_pypi.sh"
-      env:
-      - TWINE_USERNAME=peterz-openai
-      - AWS_ACCESS_KEY_ID=AKIAWAJNL6RI5SR2ILDN
-      - AWS_DEFAULT_REGION=us-west-2
-      - S3_BUCKET=openai-sci-artifacts
-      - S3_PREFIX=travis-builds/
-      # AWS_SECRET_ACCESS_KEY
-      - secure: v3l7XV9RiFYPc26FkUHkh/yexewqRtR80aAdpQjPhwha2Z2p+2v7udaKdd10ln8HN9QOGKuH8Fg/O4IaoH+eHhuB3cX0gEaU0xisRNFkSe5b6hfGuyK8WmL1nhXmSlL2QREGmpQHSLvTkYC6ctgZtSf2mDMo+6VGvjv1f5+qXTrnvhPdwkkGsz4T/XEtvDWSMlO1NB4YznxsikE29hGMlTn3ZF+w8u7agxnxh/aHPJe7Xyb9HwXhih0V26tcikflFzXWNOGzDDlAgae8UVFj4BeQj/lar46oYw2mTWfZj+3TikMQWX3WhVDyZ6yHnJmgyg+jcJ6/hMUnDha5BiEsn0PPrOt442zFNcVmuauaYZpK2l2ur77yQUtzDJFgvYJ3JhJqN9M5Zio8VKPVL/oCJZ5VhHhqjAub/dYU6e/2OXAPzTG+gMvsf3lGw4ikN+yRSPH9CfNLSWcdzYml3jAKNJ3EyoItLXVo6S/Jw4ouAxkksIkUkvv4+NXGmdwlAe/RxKPBZsuGuJzEycMVsA0h1Uu9qt994KzqeFdlktcmzi1/ibkUVPPGhkHLW8HWVYsBtTZoIe0AVKUqnE/QxlEnpuCNK78gANh49ZMaehuAx6oL2w0syjsQPqiNACbEFzCcy+4q4iqKXfPJkb7krQc0gECXjma3L7pAZSYIHgEszRA=
-      # TWINE_PASSWORD
-      - secure: t22vigYVWbmw9xCNO3WmncFJo79f09UI6NCe3/uTnfPgz/4jeYwHNbRseQeF83Hze4RcH9P/UABgpChWXURxVeuCnOKeCnIAHGQNbb911XajWXeYVRD/p1trUZ+KSVlZ4RrETnzvPvzntqJUVzF4yTegh3LdAONJde13MPPlbBUQwXzjFoSJmwoZ8+xoMTl8uJNgbgSDxleRdLQIMNTt2uNQUjFaxNriPhXxtqooGupUkwL+gxrqueqi3YCpVuPK2eNe1yazf7v8uMgV2gZZvlMtyiNQ1PpNNMO7/eQG3iDwO4vpucdXASlrS8FfDedxWjLBUy16DgCjl5HT25V44dqCw6DomFpvnS1Gyx7LC2QVXdsJFxbt89mU7y0ZgiSvCgld9G7SKDsns3P9abfrL69PQqs8t/A9mFObOQP92+HZpPkjAclUOYP+VOU7AHYoFD2Khk5txSlLXV7MBEanHJHgMNYx+e6GF5raRcfra3USvUDiDH6XZHwyGe4kELco0vejeN7L8mLjFPW+tfjGgkqD7vJFVOMPUKpWn3ov+ESoOwCiAzloOzjCiIXHM8tLOtPZxVrLYeqV4v4rIbXvY+9HRjWXu9jNIKwnssHVJ899cikaF6nYZDPHHCRZqbFcTDo+3Z+cjsMEywaTyiNluZuMyq89CC1tG17P6eXnAsE=
+    provider: pypi
+    username: peterz-openai
+    password: 
+       - secure: t22vigYVWbmw9xCNO3WmncFJo79f09UI6NCe3/uTnfPgz/4jeYwHNbRseQeF83Hze4RcH9P/UABgpChWXURxVeuCnOKeCnIAHGQNbb911XajWXeYVRD/p1trUZ+KSVlZ4RrETnzvPvzntqJUVzF4yTegh3LdAONJde13MPPlbBUQwXzjFoSJmwoZ8+xoMTl8uJNgbgSDxleRdLQIMNTt2uNQUjFaxNriPhXxtqooGupUkwL+gxrqueqi3YCpVuPK2eNe1yazf7v8uMgV2gZZvlMtyiNQ1PpNNMO7/eQG3iDwO4vpucdXASlrS8FfDedxWjLBUy16DgCjl5HT25V44dqCw6DomFpvnS1Gyx7LC2QVXdsJFxbt89mU7y0ZgiSvCgld9G7SKDsns3P9abfrL69PQqs8t/A9mFObOQP92+HZpPkjAclUOYP+VOU7AHYoFD2Khk5txSlLXV7MBEanHJHgMNYx+e6GF5raRcfra3USvUDiDH6XZHwyGe4kELco0vejeN7L8mLjFPW+tfjGgkqD7vJFVOMPUKpWn3ov+ESoOwCiAzloOzjCiIXHM8tLOtPZxVrLYeqV4v4rIbXvY+9HRjWXu9jNIKwnssHVJ899cikaF6nYZDPHHCRZqbFcTDo+3Z+cjsMEywaTyiNluZuMyq89CC1tG17P6eXnAsE=
+    on:
+        tags: true
+# deploy:
+#   provider: s3
+#   access_key_id: AKIAWAJNL6RI5SR2ILDN
+#   skip_cleanup: true
+#   region: us-west-2
+#   secret_access_key:
+#     secure: MNYHFopROJWJqG40NohznhS/ECpbqml//Xkk3YkiccaTeztHM1TWOYwWYpA73H5oPDlRrj82jEZqJUDRtwPO4T2EabDq7SLjlgtP4pcqFoW+Nrtha4ZQzVeoHiqsN3A8ZboR2t/nu+vMvGkY/pbqXMtuYbt0VDOCi2heFTXKuvbbloW2HBQAc6O3UQfgnRU8IFyLDbSFC23abA71Q6fIlTCdlk9/cs2zwP41AcjVpBoxq755EfxKej940ocjg2Q8hNko1Wz3T7lyUvN6n8MkfjE2GJSRDWsWnSiN5xcEUCfxbRG3cw30A8xglQcKNpA3H/L7x7ofUgkto9E/WyABgxLZi58CqmkCMu5C7nkxrWYAIMXEFBBWoht06wL5ks9Sjoo7fZ37B5tLY6A2bj8zpRbOW8hNE4BCn3OBavOY2bHey2zGe1XLGN2pLlvorpgrDB60HAKD9qyoIqQvKBJmyZICVRoQsb27SvwHJmnRtw8tt9Q807fTK7aYKarC3pkKw1xBG8Tjq3I3Oadg1lvd9QwFK7K9O2SWtMw8Z/ubN+Jw51MozNEWrB+75e3pQAvGd1eiYxoTtPXnB6TzNYn8it7GIToTqER91E4bcs6NIFA4ZoxPICqZlU+S0urrQjqroNTy5R8O6bsSwQtkOv4gu6GwY/JQwQYUfOebA0pCpAo=
+#   bucket: openai-sci-artifacts
+#   local-dir: wheelhouse
+#   upload-dir: travis-builds/atari-py/$TRAVIS_TAG
+#   acl: public_read
+#   on:
+#     repo: openai/atari-py
+#     tags: true
+# jobs:
+#   include:
+#     - stage: Deploy to PyPI
+#       script: "./deploy_to_pypi.sh"
+#       env:
+#       - TWINE_USERNAME=peterz-openai
+#       - AWS_ACCESS_KEY_ID=AKIAWAJNL6RI5SR2ILDN
+#       - AWS_DEFAULT_REGION=us-west-2
+#       - S3_BUCKET=openai-sci-artifacts
+#       - S3_PREFIX=travis-builds/
+#       # AWS_SECRET_ACCESS_KEY
+#       - secure: v3l7XV9RiFYPc26FkUHkh/yexewqRtR80aAdpQjPhwha2Z2p+2v7udaKdd10ln8HN9QOGKuH8Fg/O4IaoH+eHhuB3cX0gEaU0xisRNFkSe5b6hfGuyK8WmL1nhXmSlL2QREGmpQHSLvTkYC6ctgZtSf2mDMo+6VGvjv1f5+qXTrnvhPdwkkGsz4T/XEtvDWSMlO1NB4YznxsikE29hGMlTn3ZF+w8u7agxnxh/aHPJe7Xyb9HwXhih0V26tcikflFzXWNOGzDDlAgae8UVFj4BeQj/lar46oYw2mTWfZj+3TikMQWX3WhVDyZ6yHnJmgyg+jcJ6/hMUnDha5BiEsn0PPrOt442zFNcVmuauaYZpK2l2ur77yQUtzDJFgvYJ3JhJqN9M5Zio8VKPVL/oCJZ5VhHhqjAub/dYU6e/2OXAPzTG+gMvsf3lGw4ikN+yRSPH9CfNLSWcdzYml3jAKNJ3EyoItLXVo6S/Jw4ouAxkksIkUkvv4+NXGmdwlAe/RxKPBZsuGuJzEycMVsA0h1Uu9qt994KzqeFdlktcmzi1/ibkUVPPGhkHLW8HWVYsBtTZoIe0AVKUqnE/QxlEnpuCNK78gANh49ZMaehuAx6oL2w0syjsQPqiNACbEFzCcy+4q4iqKXfPJkb7krQc0gECXjma3L7pAZSYIHgEszRA=
+#       # TWINE_PASSWORD
+#       - secure: t22vigYVWbmw9xCNO3WmncFJo79f09UI6NCe3/uTnfPgz/4jeYwHNbRseQeF83Hze4RcH9P/UABgpChWXURxVeuCnOKeCnIAHGQNbb911XajWXeYVRD/p1trUZ+KSVlZ4RrETnzvPvzntqJUVzF4yTegh3LdAONJde13MPPlbBUQwXzjFoSJmwoZ8+xoMTl8uJNgbgSDxleRdLQIMNTt2uNQUjFaxNriPhXxtqooGupUkwL+gxrqueqi3YCpVuPK2eNe1yazf7v8uMgV2gZZvlMtyiNQ1PpNNMO7/eQG3iDwO4vpucdXASlrS8FfDedxWjLBUy16DgCjl5HT25V44dqCw6DomFpvnS1Gyx7LC2QVXdsJFxbt89mU7y0ZgiSvCgld9G7SKDsns3P9abfrL69PQqs8t/A9mFObOQP92+HZpPkjAclUOYP+VOU7AHYoFD2Khk5txSlLXV7MBEanHJHgMNYx+e6GF5raRcfra3USvUDiDH6XZHwyGe4kELco0vejeN7L8mLjFPW+tfjGgkqD7vJFVOMPUKpWn3ov+ESoOwCiAzloOzjCiIXHM8tLOtPZxVrLYeqV4v4rIbXvY+9HRjWXu9jNIKwnssHVJ899cikaF6nYZDPHHCRZqbFcTDo+3Z+cjsMEywaTyiNluZuMyq89CC1tG17P6eXnAsE=
