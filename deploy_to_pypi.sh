@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-TRAVIS_TAG=0.2.6
+# TRAVIS_TAG=0.2.6
 
 if [[ -z "$TRAVIS_TAG" ]]; then
     echo "Not a tagged commit, quitting"
