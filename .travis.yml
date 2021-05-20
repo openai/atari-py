@@ -27,6 +27,10 @@ deploy:
   on:
     repo: openai/atari-py
     tags: true
+# current deployment system is quite hacky. We first deploy a wheel from each platform to AWS, and then, in a separate build stage
+# download those wheels from AWS and deploy them to pypi. Currently, this is justified by the fact that deployment to pypi does not
+# work very well on travis when not using "python" build enviroment (e.g. built-in python is of version 2.7, and pypi deployment
+# script requires at least 3.6... Probably can be reworked to a simpler version after some browsing of travis docs and experimenting
 jobs:
   include:
     - stage: Deploy to PyPI
