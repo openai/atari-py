@@ -10,9 +10,19 @@ option(BUILD_CPP_LIB "Build C++ Shared Library" OFF)
 option(BUILD_CLI "Build ALE Command Line Interface" OFF)
 option(BUILD_C_LIB "Build ALE C Library (needed for Python interface)" ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS")
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -fomit-frame-pointer -D__STDC_CONSTANT_MACROS")
 add_definitions(-DHAVE_INTTYPES)
-set(LINK_LIBS z)
+ 
+find_package(ZLIB)
+
+if(ZLIB_FOUND)
+  set(LINK_LIBS ZLIB::ZLIB) # Should be the same as ${ZLIB_LIBRARIES}
+  set(ZLIB_INCLUDE ${ZLIB_INCLUDE_DIRS})
+else()
+  set(LINK_LIBS z)
+  set(ZLIB_INCLUDE ${SOURCE_DIR}/zlib)
+endif()
 
 if(USE_RLGLUE)
   add_definitions(-D__USE_RLGLUE)
@@ -114,7 +124,7 @@ endif(UNIX)
 
 include_directories(
   ${SOURCE_DIR}
-  ${SOURCE_DIR}/zlib
+  ${ZLIB_INCLUDE}
   ${SOURCE_DIR}/common
   ${SOURCE_DIR}/controllers
   ${SOURCE_DIR}/emucore
