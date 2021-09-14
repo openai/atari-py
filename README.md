@@ -1,4 +1,9 @@
-**Status:** Maintenance (expect bug fixes and minor updates)
+**Status:** Deprecated (don't expect bug fixes or other updates)
+
+Notice: `atari-py` is fully deprecated and no future updates, bug fixes or releases will be made.
+Please use the official [Arcade Learning Environment](https://github.com/mgbellemare/Arcade-Learning-Environment) Python package (`ale-py`) instead;
+it is fully backwards compatible with all `atari-py` code.
+
 
 # atari_py
 
