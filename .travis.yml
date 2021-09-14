@@ -1,0 +1,33 @@
+language: sh
+script: "./build.sh"
+os:
+- linux
+- windows
+- osx
+arch:
+- amd64
+- arm64
+env:
+- PY_VER=3.6
+- PY_VER=3.7
+- PY_VER=3.8
+- PY_VER=3.9
+osx_image: xcode8.3
+matrix:
+  exclude:
+    os: windows
+    env: PY_VER=3.5
+deploy:
+  provider: s3
+  skip_cleanup: true
+  local-dir: wheelhouse
+  upload-dir: travis-builds/atari-py/$TRAVIS_TAG
+  acl: public_read
+  on:
+    repo: openai/atari-py
+    tags: true
+jobs:
+  include:
+    - stage: Deploy to PyPI
+      script: "./deploy_to_pypi.sh"
+
