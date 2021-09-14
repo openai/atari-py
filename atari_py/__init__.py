@@ -7,7 +7,7 @@ print(
     "[NOTICE] atari-py is deprecated in favor ale-py "
     "and will no longer receive further maintenance or critical updates. "
     "ale-py is fully backwards compatible with atari-py. "
-    "If you're using Gym, you can simply upgrade via pip install -U gym[atari]"
+    "If you're using Gym, you can simply upgrade via pip install -U gym[atari]",
     file=sys.stderr,
 )
 
